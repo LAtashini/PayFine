@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 import { Html5QrcodeScanner } from "html5-qrcode";
@@ -50,6 +50,38 @@ const AddNewFine = () => {
         amount: ''
     });
 
+
+    const [officerName, setOfficerName] = useState('Loading...'); // Default placeholder
+
+    useEffect(() => {
+        const fetchOfficerName = async () => {
+            const policeId = localStorage.getItem("policeId");
+            if (!policeId) {
+                console.warn("Police ID missing.");
+                setOfficerName("Unknown Officer");
+                return;
+            }
+
+            try {
+                const res = await fetch(`http://localhost:4000/api/police/profile/${policeId}`);
+                const data = await res.json();
+
+                if (res.ok) {
+                    const name = data?.police?.name || data?.name || "Officer";
+                    setOfficerName(name);
+                } else {
+                    console.warn("Failed to fetch officer name:", data.message);
+                    setOfficerName("Officer");
+                }
+            } catch (err) {
+                console.error("Error fetching officer name:", err);
+                setOfficerName("Officer");
+            }
+        };
+
+        fetchOfficerName();
+    }, []);
+
     const toggleUserDropdown = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);
     };
@@ -73,6 +105,7 @@ const AddNewFine = () => {
             }
         }
     };
+
 
 
     const handleAddProvision = () => {
@@ -277,8 +310,12 @@ const AddNewFine = () => {
 
                 {/* Logout Button at the bottom */}
                 <button
-                    onClick={() => alert('Logout clicked')}
-                    className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold"
+                    onClick={() => {
+                        localStorage.removeItem("authToken");
+                        localStorage.removeItem("policeId"); // Clear policeId too
+                        window.location.href = "/";
+                    }}
+                    className="block w-full py-2.5 px-4 rounded bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
                 >
                     Logout
                 </button>
@@ -294,11 +331,11 @@ const AddNewFine = () => {
                     <div className="relative">
                         <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
                             <img
-                                src="https://via.placeholder.com/40"
+                                src={'https://www.w3schools.com/howto/img_avatar.png'}
                                 alt="User Profile"
                                 className="w-10 h-10 rounded-full"
                             />
-                            <span className="ml-2 text-white">Officer John</span>
+                            <span className="ml-2 text-white">{officerName}</span>
                             <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                             </svg>

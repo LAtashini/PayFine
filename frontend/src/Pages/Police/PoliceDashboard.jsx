@@ -1,39 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import logo from '../../assets/images/logo.png';
 
-const DriversPastFine = () => {
+const PoliceDashboard = () => {
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-    const [licenseNumber, setLicenseNumber] = useState('B1234567');
-    const [pastFines, setPastFines] = useState([]);
-    const userName = "Officer John";
-    const userProfilePic = "https://via.placeholder.com/40";
-
-    // More comprehensive mock data
-    const mockPastFines = [
-        { id: 1, provision: "Speeding (Exceeding 50km/h limit)", vehicleNumber: "ABC-1234", place: "Colombo - Galle Road", issuedDate: "2023-10-01", amount: "LKR 3,500" },
-        { id: 2, provision: "Illegal Parking (No Parking Zone)", vehicleNumber: "XYZ-5678", place: "Kandy - Temple Road", issuedDate: "2023-10-05", amount: "LKR 2,000" },
-        { id: 3, provision: "Red Light Violation", vehicleNumber: "DEF-9101", place: "Galle - Main Junction", issuedDate: "2023-10-10", amount: "LKR 5,000" },
-        { id: 4, provision: "No Seatbelt", vehicleNumber: "GHI-1121", place: "Negombo - Beach Road", issuedDate: "2023-09-15", amount: "LKR 1,500" },
-        { id: 5, provision: "Using Mobile Phone While Driving", vehicleNumber: "JKL-3141", place: "Colombo - Union Place", issuedDate: "2023-09-20", amount: "LKR 2,500" },
-    ];
+    const [userName, setUserName] = useState("Officer");
+    const [userProfilePic, setUserProfilePic] = useState("https://via.placeholder.com/40");
+    const [dashboardMetrics, setDashboardMetrics] = useState({
+        reportedFineCount: 0,
+        reportedFineAmount: "LKR 0",
+        policeStation: "N/A",
+        court: "N/A"
+    });
 
     useEffect(() => {
-        // Load mock data automatically for screenshot purposes
-        setPastFines(mockPastFines);
+        const fetchDashboardData = async () => {
+            try {
+                const policeId = localStorage.getItem("policeId");
+                if (!policeId) {
+                    console.warn("Police ID not found in local storage.");
+                    return;
+                }
+
+                // Fetch reported fines data
+                const fineResponse = await axios.get(`http://localhost:4000/api/police/reported-fine/${policeId}`);
+                console.log("Fetched dashboard data:", fineResponse.data);
+
+                setDashboardMetrics({
+                    reportedFineCount: fineResponse.data.count || 0,
+                    reportedFineAmount: `LKR ${fineResponse.data.amount || 0}`,
+                    policeStation: fineResponse.data.station || "N/A",
+                    court: fineResponse.data.court || "N/A"
+                });
+
+                // Fetch police profile data
+                const profileResponse = await axios.get(`http://localhost:4000/api/police/profile/${policeId}`);
+                console.log("Fetched police profile:", profileResponse.data);
+
+                const police = profileResponse.data.police || profileResponse.data;
+                setUserName(police.name || "Officer");
+                setUserProfilePic(police.profilePic || "https://via.placeholder.com/40");
+
+            } catch (error) {
+                console.error("Error fetching police dashboard or profile data:", error);
+            }
+        };
+
+        fetchDashboardData();
     }, []);
 
     const toggleUserDropdown = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);
-    };
-
-    const handleSearch = () => {
-        if (licenseNumber) {
-            // In a real app, this would filter data based on license number
-            setPastFines(mockPastFines);
-        } else {
-            alert("Please enter a driving license number.");
-        }
     };
 
     return (
@@ -48,42 +66,50 @@ const DriversPastFine = () => {
                             <span className="text-blue-400">Fine</span>
                         </span>
                     </div>
-
                     <nav className="space-y-4">
-                        <Link to="/PoliceDashboard" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
+                        <Link to="/PoliceDashboard" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Dashboard
                         </Link>
-                        <Link to="/AddNewFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
+                        <Link to="/AddNewFine" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Add New Fine
                         </Link>
-                        <Link to="/DriversPastFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
+                        <Link to="/DriversPastFine" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Drivers Past Fines
                         </Link>
-                        <Link to="/RevenueLicense" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
+                        <Link to="/RevenueLicense" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Revenue License
                         </Link>
-                        <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
+                        <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             View Reported Fine
                         </Link>
                     </nav>
                 </div>
 
                 <button
-                    onClick={() => alert('Logout clicked')}
-                    className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
+                    onClick={() => {
+                        localStorage.removeItem("authToken");
+                        localStorage.removeItem("policeId"); // Clear policeId too
+                        window.location.href = "/";
+                    }}
+                    className="block w-full py-2.5 px-4 rounded bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
                 >
                     Logout
                 </button>
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col">
-                {/* Header */}
+            <div className="flex-1 flex flex-col overflow-auto">
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
-                    <div></div>
+                    <div>
+                        <span className="text-3xl font-bold text-white">Pay<span className="text-blue-400">Fine</span></span>
+                    </div>
                     <div className="relative">
                         <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
-                            <img src={userProfilePic} alt="User Profile" className="w-10 h-10 rounded-full" />
+                            <img
+                                src={'https://www.w3schools.com/howto/img_avatar.png'}
+                                alt="User Profile"
+                                className="w-10 h-10 rounded-full"
+                            />
                             <span className="ml-2 text-white">{userName}</span>
                             <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -91,11 +117,15 @@ const DriversPastFine = () => {
                         </button>
                         {isUserDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-slate-400 rounded-md shadow-lg py-1">
-                                <Link to="/PolicemanProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white">
+                                <Link to="/PoliceProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white">
                                     Edit Profile
                                 </Link>
                                 <button
-                                    onClick={() => alert('Logout clicked')}
+                                    onClick={() => {
+                                        localStorage.removeItem("authToken");
+                                        localStorage.removeItem("policeId");
+                                        window.location.href = "/login";
+                                    }}
                                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white"
                                 >
                                     Logout
@@ -105,58 +135,14 @@ const DriversPastFine = () => {
                     </div>
                 </header>
 
-                {/* Page Content */}
                 <main className="flex-1 p-6 bg-gray-300">
-                    <h1 className="text-2xl font-semibold text-purple-900 mb-6">Drivers Past Fines</h1>
-
-                    {/* Search Section */}
-                    <div className="mb-6 bg-white p-4 rounded-lg shadow">
-                        <div className="flex items-center">
-                            <input
-                                type="text"
-                                placeholder="Enter Driving License Number"
-                                value={licenseNumber}
-                                onChange={(e) => setLicenseNumber(e.target.value)}
-                                className="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-purple-700"
-                            />
-                            <button
-                                onClick={handleSearch}
-                                className="bg-purple-700 text-white px-4 py-2 rounded-r-md hover:bg-purple-800 transition duration-200"
-                            >
-                                Search
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Results Section */}
-                    <div className="bg-white rounded-lg shadow overflow-hidden">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-purple-900 text-white">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Fine ID</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Provision</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Vehicle No.</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Place</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Issued Date</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {pastFines.map((fine) => (
-                                    <tr key={fine.id} className="hover:bg-gray-50 transition duration-150">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-purple-700">#{fine.id}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fine.provision}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-medium">{fine.vehicleNumber}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fine.place}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{fine.issuedDate}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-red-600">{fine.amount}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        <div className="bg-gray-50 px-6 py-3 text-right text-sm font-medium text-gray-500">
-                            Showing {pastFines.length} of {pastFines.length} records
-                        </div>
+                    <h1 className="text-2xl font-semibold text-purple-900 mb-6">Police Dashboard</h1>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        {/* Cards showing fetched data */}
+                        <DashboardCard title="Reported Fine Count" value={dashboardMetrics.reportedFineCount} icon="📄" color="blue" />
+                        <DashboardCard title="Reported Fine Amount" value={dashboardMetrics.reportedFineAmount} icon="💰" color="green" />
+                        <DashboardCard title="Police Station" value={dashboardMetrics.policeStation} icon="🏢" color="purple" />
+                        <DashboardCard title="Court" value={dashboardMetrics.court} icon="⚖️" color="yellow" />
                     </div>
                 </main>
             </div>
@@ -164,4 +150,16 @@ const DriversPastFine = () => {
     );
 };
 
-export default DriversPastFine;
+const DashboardCard = ({ title, value, icon, color }) => (
+    <div className={`bg-white p-6 rounded-lg shadow-md flex items-center`}>
+        <div className={`bg-${color}-100 p-3 rounded-full`}>
+            <span className="text-2xl">{icon}</span>
+        </div>
+        <div className="ml-4">
+            <p className="text-gray-600">{title}</p>
+            <p className={`text-2xl font-bold text-${color}-900`}>{value}</p>
+        </div>
+    </div>
+);
+
+export default PoliceDashboard;

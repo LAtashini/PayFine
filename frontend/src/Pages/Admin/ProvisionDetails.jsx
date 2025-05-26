@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiTrash2, FiEdit, FiSave, FiX, FiPlus } from 'react-icons/fi';
 import logo from '../../assets/images/logo.png';
@@ -6,8 +6,32 @@ import logo from '../../assets/images/logo.png';
 const ProvisionDetails = () => {
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const navigate = useNavigate();
-    const userName = localStorage.getItem("adminName") || "Admin r";
+    // const userName = localStorage.getItem("adminName") || "Admin r";
     const userProfilePic = localStorage.getItem("adminPic") || "https://via.placeholder.com/40";
+    const [provisions, setProvisions] = useState([]);
+
+    useEffect(() => {
+        const fetchProvisions = async () => {
+            try {
+                const token = localStorage.getItem("adminToken"); // or admin token if used
+                const res = await fetch("http://localhost:4000/api/admin/provisions", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    setProvisions(data);
+                } else {
+                    console.error("Failed to fetch provisions:", data.message);
+                }
+            } catch (err) {
+                console.error("Error fetching provisions:", err);
+            }
+        };
+        fetchProvisions();
+    }, []);
+
 
     // Form state
     const [formData, setFormData] = useState({
@@ -15,22 +39,6 @@ const ProvisionDetails = () => {
         sectionOfAct: '',
         fineAmount: ''
     });
-
-    // Table data state
-    const [provisions, setProvisions] = useState([
-        {
-            id: 'PV001',
-            provisionId: 'SEC-101',
-            sectionOfAct: 'Traffic Violation',
-            fineAmount: '5000 LKR'
-        },
-        {
-            id: 'PV002',
-            provisionId: 'SEC-205',
-            sectionOfAct: 'Illegal Parking',
-            fineAmount: '3000 LKR'
-        }
-    ]);
 
     const [editingId, setEditingId] = useState(null);
     const [editFormData, setEditFormData] = useState({
@@ -67,19 +75,34 @@ const ProvisionDetails = () => {
     };
 
     // Add new provision
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const newProvision = {
-            id: `PV${(provisions.length + 1).toString().padStart(3, '0')}`,
-            ...formData
-        };
-        setProvisions([...provisions, newProvision]);
-        setFormData({ provisionId: '', sectionOfAct: '', fineAmount: '' });
+        try {
+            const token = localStorage.getItem("adminToken");
+            const res = await fetch("http://localhost:4000/api/admin/provisions", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setProvisions(prev => [...prev, data]);
+                setFormData({ provisionId: '', sectionOfAct: '', fineAmount: '' });
+            } else {
+                alert(data.message || "Failed to add provision.");
+            }
+        } catch (err) {
+            console.error("Error adding provision:", err);
+            alert("Error adding provision.");
+        }
     };
 
     // Edit provision
     const handleEdit = (provision) => {
-        setEditingId(provision.id);
+        setEditingId(provision._id);
         setEditFormData({
             provisionId: provision.provisionId,
             sectionOfAct: provision.sectionOfAct,
@@ -88,13 +111,30 @@ const ProvisionDetails = () => {
     };
 
     // Save edited provision
-    const handleSaveEdit = () => {
-        const updatedProvisions = provisions.map(provision =>
-            provision.id === editingId ? { ...provision, ...editFormData } : provision
-        );
-        setProvisions(updatedProvisions);
-        setEditingId(null);
+    const handleSaveEdit = async () => {
+        const token = localStorage.getItem('adminToken');
+        try {
+            const res = await fetch(`http://localhost:4000/api/admin/provisions/${editingId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(editFormData)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                // Update local state with backend response
+                setProvisions(prev => prev.map(p => p._id === editingId ? data : p));
+                setEditingId(null);
+            } else {
+                alert(data.message || 'Failed to update provision');
+            }
+        } catch (err) {
+            console.error('Error updating provision:', err);
+        }
     };
+
 
     // Cancel edit
     const handleCancelEdit = () => {
@@ -102,11 +142,67 @@ const ProvisionDetails = () => {
     };
 
     // Delete provision
-    const handleDelete = (id) => {
-        if (window.confirm('Are you sure you want to delete this provision?')) {
-            setProvisions(provisions.filter(provision => provision.id !== id));
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this provision?")) return;
+        try {
+            const token = localStorage.getItem("authToken");
+            const res = await fetch(`http://localhost:4000/api/admin/provisions/${id}`, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setProvisions(prev => prev.filter(prov => prov._id !== id));
+            } else {
+                alert(data.message || "Failed to delete provision.");
+            }
+        } catch (err) {
+            console.error("Error deleting provision:", err);
+            alert("Error deleting provision.");
         }
     };
+
+
+    const [userName, setUserName] = useState('Loading...');
+    useEffect(() => {
+        const fetchAdminData = async () => {
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                setUserName('Unknown Admin');
+                console.warn('Admin token not found.');
+                return;
+            }
+
+            try {
+                const res = await fetch('http://localhost:4000/api/admin/dashboard', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    // 🔥 Assuming the backend returns admin info in a `user` field or similar
+                    const adminName = localStorage.getItem("adminName");
+                    setUserName(adminName);
+                } else {
+                    console.warn('Failed to fetch admin data:', data.message);
+                    const adminName = localStorage.getItem("adminName");
+                    setUserName(adminName);
+                }
+            } catch (err) {
+                console.error('Error fetching admin data:', err);
+                const adminName = localStorage.getItem("adminName");
+                setUserName(adminName);
+            }
+        };
+
+        fetchAdminData();
+    }, []);
+
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -264,10 +360,10 @@ const ProvisionDetails = () => {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {provisions.map((provision) => (
-                                        <tr key={provision.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{provision.id}</td>
+                                        <tr key={provision._id}> {/* Use _id as the unique key */}
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{provision._id}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {editingId === provision.id ? (
+                                                {editingId === provision._id ? (
                                                     <input
                                                         type="text"
                                                         name="provisionId"
@@ -280,7 +376,7 @@ const ProvisionDetails = () => {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {editingId === provision.id ? (
+                                                {editingId === provision._id ? (
                                                     <input
                                                         type="text"
                                                         name="sectionOfAct"
@@ -293,7 +389,7 @@ const ProvisionDetails = () => {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                {editingId === provision.id ? (
+                                                {editingId === provision._id ? (
                                                     <input
                                                         type="text"
                                                         name="fineAmount"
@@ -306,7 +402,7 @@ const ProvisionDetails = () => {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                {editingId === provision.id ? (
+                                                {editingId === provision._id ? (
                                                     <div className="flex space-x-2">
                                                         <button
                                                             onClick={handleSaveEdit}
@@ -333,7 +429,7 @@ const ProvisionDetails = () => {
                                                             <FiEdit size={18} />
                                                         </button>
                                                         <button
-                                                            onClick={() => handleDelete(provision.id)}
+                                                            onClick={() => handleDelete(provision._id)}
                                                             className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-100"
                                                             title="Delete"
                                                         >
@@ -345,6 +441,7 @@ const ProvisionDetails = () => {
                                         </tr>
                                     ))}
                                 </tbody>
+
                             </table>
                         </div>
                     </div>

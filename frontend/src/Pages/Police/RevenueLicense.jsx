@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 
@@ -109,6 +109,34 @@ const RevenueLicense = () => {
         }
     };
 
+    const [userName, setUserName] = useState("Loading...");
+    useEffect(() => {
+        const fetchOfficerName = async () => {
+            const policeId = localStorage.getItem("policeId");
+            if (!policeId) {
+                setUserName("Unknown Officer");
+                console.warn("Police ID not found.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`http://localhost:4000/api/police/profile/${policeId}`);
+                const data = await res.json();
+
+                if (res.ok) {
+                    setUserName(data?.police?.name || data?.name || "Officer");
+                } else {
+                    setUserName("Officer");
+                    console.warn("Failed to fetch officer name:", data.message);
+                }
+            } catch (err) {
+                setUserName("Officer");
+                console.error("Error fetching officer name:", err);
+            }
+        };
+
+        fetchOfficerName();
+    }, []);
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -145,8 +173,12 @@ const RevenueLicense = () => {
 
                 {/* Logout Button at the bottom */}
                 <button
-                    onClick={() => alert('Logout clicked')}
-                    className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
+                    onClick={() => {
+                        localStorage.removeItem("authToken");
+                        localStorage.removeItem("policeId"); // Clear policeId too
+                        window.location.href = "/";
+                    }}
+                    className="block w-full py-2.5 px-4 rounded bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
                 >
                     Logout
                 </button>
@@ -162,11 +194,11 @@ const RevenueLicense = () => {
                     <div className="relative">
                         <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
                             <img
-                                src="https://via.placeholder.com/40"
+                                src={'https://www.w3schools.com/howto/img_avatar.png'}
                                 alt="User Profile"
                                 className="w-10 h-10 rounded-full"
                             />
-                            <span className="ml-2 text-white">Police Officer</span>
+                            <span className="ml-2 text-white">{userName}</span>
                             <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
