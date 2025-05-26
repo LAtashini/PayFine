@@ -380,7 +380,7 @@ const PendingFine = () => {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.referenceNo}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.licenseId}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.policeId}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.amount}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.totalAmount}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 {fine.issuedDate ? new Date(fine.issuedDate).toLocaleDateString() : "N/A"}
                                             </td>

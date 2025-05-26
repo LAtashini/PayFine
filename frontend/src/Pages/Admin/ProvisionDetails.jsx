@@ -13,15 +13,11 @@ const ProvisionDetails = () => {
     useEffect(() => {
         const fetchProvisions = async () => {
             try {
-                const token = localStorage.getItem("adminToken"); // or admin token if used
-                const res = await fetch("http://localhost:4000/api/admin/provisions", {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const res = await fetch("http://localhost:4000/api/admin/provisions");
                 const data = await res.json();
                 if (res.ok) {
                     setProvisions(data);
+                    console.log(data);
                 } else {
                     console.error("Failed to fetch provisions:", data.message);
                 }
@@ -89,8 +85,10 @@ const ProvisionDetails = () => {
             });
             const data = await res.json();
             if (res.ok) {
-                setProvisions(prev => [...prev, data]);
                 setFormData({ provisionId: '', sectionOfAct: '', fineAmount: '' });
+                // fetchProvisions();
+                window.location.reload();  // This reloads the entire page
+
             } else {
                 alert(data.message || "Failed to add provision.");
             }
@@ -376,7 +374,7 @@ const ProvisionDetails = () => {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th> */}
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Provision ID</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Section of Act</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fine Amount</th>
@@ -385,8 +383,8 @@ const ProvisionDetails = () => {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {provisions.map((provision) => (
-                                        <tr key={provision._id}> {/* Use _id as the unique key */}
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{provision._id}</td>
+                                        <tr key={provision._id}>
+                                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{provision._id}</td> */}
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 {editingId === provision._id ? (
                                                     <input
@@ -397,7 +395,7 @@ const ProvisionDetails = () => {
                                                         className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
                                                     />
                                                 ) : (
-                                                    provision.provisionId
+                                                    provision.fineId
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -410,7 +408,7 @@ const ProvisionDetails = () => {
                                                         className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
                                                     />
                                                 ) : (
-                                                    provision.sectionOfAct
+                                                    provision.section
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -423,7 +421,7 @@ const ProvisionDetails = () => {
                                                         className="w-full px-2 py-1 border rounded focus:ring-blue-500 focus:border-blue-500"
                                                     />
                                                 ) : (
-                                                    provision.fineAmount
+                                                    provision.amount
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

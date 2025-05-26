@@ -77,6 +77,7 @@ const DriverDashboard = () => {
                         <Link to="/DriversPaidFine" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Driver's Paid Fine</Link>
                         <Link to="/DriverProvisionDetails" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Provision Details</Link>
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Notifications</Link>
+                        <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link>
                     </nav>
                 </div>
                 <button
@@ -115,7 +116,7 @@ const DriverDashboard = () => {
                                     onClick={() => {
                                         localStorage.removeItem('driverToken');
                                         localStorage.removeItem('driverLicenseId');
-                                        window.location.href = '/login';
+                                        window.location.href = '/';
                                     }}
                                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white"
                                 >

@@ -5,9 +5,9 @@ import authAdmin from "../middlewares/authAdmin.js";
 
 const router = express.Router();
 
-router.post("/", authAdmin, addProvision);
-router.get("/", authAdmin, getAllProvisions);
-router.put("/:id", authAdmin, updateProvision);
-router.delete("/:id", authAdmin, deleteProvision);
+router.post("/", addProvision);
+router.get("/", getAllProvisions);
+router.put("/:id", updateProvision);
+router.delete("/:id", deleteProvision);
 
 export default router;

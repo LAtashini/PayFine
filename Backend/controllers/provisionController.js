@@ -17,11 +17,18 @@ export const addProvision = async (req, res) => {
 export const getAllProvisions = async (req, res) => {
     try {
         const provisions = await Provision.find();
-        res.status(200).json(provisions);
+        const formatted = provisions.map(prov => ({
+            fineId: prov.provisionId,
+            section: prov.sectionOfAct,
+            provision: `Provision for ${prov.sectionOfAct}`,  // Add meaningful text
+            amount: prov.fineAmount
+        }));
+        res.status(200).json(formatted);
     } catch (err) {
         res.status(500).json({ message: "Failed to fetch provisions", error: err.message });
     }
 };
+
 
 // Update
 export const updateProvision = async (req, res) => {

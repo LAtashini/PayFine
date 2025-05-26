@@ -268,12 +268,12 @@ const AllFine = () => {
                             >
                                 Paid
                             </button>
-                            <button
+                            {/* <button
                                 onClick={() => handleFilterClick('pending')}
                                 className={`px-4 py-2 rounded-md ${activeFilter === 'pending' ? 'bg-purple-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                             >
                                 Pending
-                            </button>
+                            </button> */}
                             <button
                                 onClick={() => handleFilterClick('expired')}
                                 className={`px-4 py-2 rounded-md ${activeFilter === 'expired' ? 'bg-purple-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}

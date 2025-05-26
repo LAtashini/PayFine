@@ -24,16 +24,6 @@ const DriverProvisionDetails = () => {
         setSortConfig({ key, direction });
     };
 
-    // const provisionData = [
-    //     { fineId: 100, section: 'Section 32', provision: 'Revenue License to be displayed on motor vehicles and produced when required.', amount: 1500.00 },
-    //     { fineId: 102, section: 'Section 128B', provision: 'Driving a special purpose vehicle without obtaining a licence.', amount: 1000.00 },
-    //     { fineId: 103, section: 'Section 128A', provision: 'Failure to obtain authorization to drive a vehicle loaded with chemicals, hazardous waste, &e.', amount: 2000.00 },
-    //     { fineId: 104, section: 'section 130', provision: 'Failure to have a Licence to drive a specific class of vehicles.', amount: 1000.00 },
-    //     { fineId: 105, section: 'Section 135', provision: 'Failure to carry a Driving Licence when driving.', amount: 2000.00 },
-    //     { fineId: 106, section: 'Section 139A', provision: 'Driving a special purpose vehicle without obtaining a licence', amount: 2000.00 },
-    //     { fineId: 107, section: 'Section 148', provision: 'Failure to comply with road rules.', amount: 2000.00 },
-    // ];
-
     const sortedData = React.useMemo(() => {
         let sortableData = [...provisionData];
         if (sortConfig.key) {
@@ -54,7 +44,7 @@ const DriverProvisionDetails = () => {
     useEffect(() => {
         const fetchProvisionDetails = async () => {
             try {
-                const response = await fetch('http://localhost:4000/api/driver/provisions');
+                const response = await fetch('http://localhost:4000/api/admin/provisions');
                 const data = await response.json();
 
                 if (response.ok) {
@@ -102,12 +92,18 @@ const DriverProvisionDetails = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
+                        <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link>
+
                     </nav>
                 </div>
 
                 {/* Logout Button at the bottom */}
                 <button
-                    onClick={() => alert('Logout clicked')}
+                    onClick={() => {
+                        localStorage.removeItem('driverToken');
+                        localStorage.removeItem('driverLicenseId');
+                        window.location.href = '/';
+                    }}
                     className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
                 >
                     Logout

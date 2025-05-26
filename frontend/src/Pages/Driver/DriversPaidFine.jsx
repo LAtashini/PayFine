@@ -167,14 +167,17 @@ const DriversPaidFine = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
+                        <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link>
+
                     </nav>
                 </div>
 
                 {/* Logout Button at the bottom */}
                 <button
                     onClick={() => {
-                        localStorage.removeItem('authToken');
-                        window.location.href = '/login';
+                        localStorage.removeItem('driverToken');
+                        localStorage.removeItem('driverLicenseId');
+                        window.location.href = '/';
                     }}
                     className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
                 >
