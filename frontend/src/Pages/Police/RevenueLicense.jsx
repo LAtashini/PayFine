@@ -165,9 +165,9 @@ const RevenueLicense = () => {
                         <Link to="/RevenueLicense" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Revenue License
                         </Link>
-                        <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
+                        {/* <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             View Reported Fine
-                        </Link>
+                        </Link> */}
                     </nav>
                 </div>
 

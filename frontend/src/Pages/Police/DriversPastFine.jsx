@@ -15,37 +15,8 @@ const DriversPastFine = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);
     };
 
-    const handleSearch = async () => {
-        if (!licenseNumber) {
-            alert("Please enter a driving license number.");
-            return;
-        }
-
-        setLoading(true);
-        setError('');
-
-        try {
-            const response = await fetch(`http://localhost:4000/api/police/reported-fine/${licenseNumber}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                setPastFines(data);
-            } else {
-                setError(data.message || "Failed to fetch past fines.");
-                setPastFines([]);
-            }
-        } catch (err) {
-            console.error('Error fetching past fines:', err);
-            setError('Server error.');
-            setPastFines([]);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
     useEffect(() => {
-        const fetchOfficerName = async () => {
+        const fetchOfficerAndFines = async () => {
             const policeId = localStorage.getItem("policeId");
             if (!policeId) {
                 setUserName("Unknown Officer");
@@ -54,24 +25,45 @@ const DriversPastFine = () => {
             }
 
             try {
+                setLoading(true);
                 const res = await fetch(`http://localhost:4000/api/police/profile/${policeId}`);
                 const data = await res.json();
 
                 if (res.ok) {
-                    setUserName(data?.police?.name || data?.name || "Officer");
+                    const officerName = data?.police?.name || data?.name || "Officer";
+                    setUserName(officerName);
+
+                    const finesRes = await fetch(`http://localhost:4000/api/police/reported-fine-by-officer/${encodeURIComponent(officerName)}`);
+                    const finesData = await finesRes.json();
+
+                    if (finesRes.ok) {
+                        setPastFines(finesData.fines);
+                    } else {
+                        setError(finesData.message || "Error fetching reported fines.");
+                        setPastFines([]);
+                    }
                 } else {
                     setUserName("Officer");
-                    console.warn("Failed to fetch officer name:", data.message);
+                    setError(data.message || "Error fetching officer name.");
+                    setPastFines([]);
                 }
-            } catch (err) {
+            } catch (error) {
+                console.error("Error fetching officer name or fines:", error);
                 setUserName("Officer");
-                console.error("Error fetching officer name:", err);
+                setError("Server error fetching fines.");
+                setPastFines([]);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchOfficerName();
+        fetchOfficerAndFines();
     }, []);
 
+    // 🔍 Filter fines based on licenseNumber input
+    const filteredFines = licenseNumber
+        ? pastFines.filter(fine => fine.licenseId?.toLowerCase().includes(licenseNumber.toLowerCase()))
+        : pastFines;
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -82,20 +74,18 @@ const DriversPastFine = () => {
                         <img src={logo} alt="PayFine Logo" className="h-12 w-12 rounded-full border-2 border-white mb-2" />
                         <span className="text-2xl font-semibold"><span className="text-white">Pay</span><span className="text-blue-400">Fine</span></span>
                     </div>
-
                     <nav className="space-y-4">
                         <Link to="/PoliceDashboard" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Dashboard</Link>
                         <Link to="/AddNewFine" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Add New Fine</Link>
                         <Link to="/DriversPastFine" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Drivers Past Fines</Link>
                         <Link to="/RevenueLicense" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Revenue License</Link>
-                        <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">View Reported Fine</Link>
+                        {/* <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">View Reported Fine</Link> */}
                     </nav>
                 </div>
-
                 <button
                     onClick={() => {
                         localStorage.removeItem("authToken");
-                        localStorage.removeItem("policeId"); // Clear policeId too
+                        localStorage.removeItem("policeId");
                         window.location.href = "/";
                     }}
                     className="block w-full py-2.5 px-4 rounded bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
@@ -110,11 +100,7 @@ const DriversPastFine = () => {
                     <div></div>
                     <div className="relative">
                         <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
-                            <img
-                                src={'https://www.w3schools.com/howto/img_avatar.png'}
-                                alt="User Profile"
-                                className="w-10 h-10 rounded-full"
-                            />
+                            <img src={'https://www.w3schools.com/howto/img_avatar.png'} alt="User Profile" className="w-10 h-10 rounded-full" />
                             <span className="ml-2 text-white">{userName}</span>
                             <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
@@ -132,8 +118,13 @@ const DriversPastFine = () => {
 
                     <div className="mb-6">
                         <div className="flex items-center">
-                            <input type="text" placeholder="Enter Driving License Number" value={licenseNumber} onChange={(e) => setLicenseNumber(e.target.value)} className="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-purple-700" />
-                            <button onClick={handleSearch} className="bg-purple-700 text-white px-4 py-2 rounded-r-md hover:bg-purple-800">Check</button>
+                            <input
+                                type="text"
+                                placeholder="Enter Driving License Number"
+                                value={licenseNumber}
+                                onChange={(e) => setLicenseNumber(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700"
+                            />
                         </div>
                         {loading && <p className="text-gray-600 mt-2">Loading...</p>}
                         {error && <p className="text-red-600 mt-2">{error}</p>}
@@ -144,18 +135,18 @@ const DriversPastFine = () => {
                             <thead className="bg-purple-900 text-white">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Fine ID</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Provision</th>
+                                    <th className="px-6 py-3 text-left text-sm font-semibold uppercase">License ID</th>
                                     <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Vehicle Number</th>
                                     <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Place</th>
                                     <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Issued Date</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
-                                {pastFines.length > 0 ? pastFines.map((fine, idx) => (
+                                {filteredFines.length > 0 ? filteredFines.map((fine, idx) => (
                                     <tr key={idx} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 text-sm text-purple-700 font-medium">#{fine._id || fine.id}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-700">{fine.provision}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-700">{fine.vehicleNumber}</td>
+                                        <td className="px-6 py-4 text-sm text-purple-700 font-medium">#{fine._referenceNo || fine.referenceNo}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-700">{fine.licenseId}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-700">{fine.vehicleNo}</td>
                                         <td className="px-6 py-4 text-sm text-gray-700">{fine.place}</td>
                                         <td className="px-6 py-4 text-sm text-gray-700">{new Date(fine.issuedDate).toLocaleDateString()}</td>
                                     </tr>

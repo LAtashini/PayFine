@@ -51,8 +51,10 @@ const SignIn = () => {
                 localStorage.setItem(`${role}Id`, userId);
                 if (role === 'police') {
                     localStorage.setItem("policeId", data.officer?.id || data.officer?.policeId || '');
+                    localStorage.setItem("policeOfficerName", data.police?.name);
 
                 }
+
 
 
                 // Navigate based on role

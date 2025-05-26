@@ -1,6 +1,7 @@
 import issuedfineModel from "../models/IssuedFineModels.js";
 import fineModel from "../models/fineModel.js";
 import policeModel from "../models/policeModel.js";
+import mongoose from "mongoose";  // Add this import if missing
 
 // 1. Police adds a new issued fine
 export const addIssuedFine = async (req, res) => {
@@ -155,24 +156,54 @@ export const notifyDriver = async (req, res) => {
     }
 };
 
-// 6. Get reported fines (police dashboard)
+// // 6. Get reported fines (police dashboard)
+// export const getReportedFines = async (req, res) => {
+//     try {
+//         const { policeId } = req.params;
+//         const fines = await issuedfineModel.find({ policeId }).populate("provision");
+
+//         const reportedFineCount = fines.length;
+//         const reportedFineAmount = fines.reduce((total, fine) => total + fine.totalAmount, 0);
+
+//         res.status(200).json({
+//             fines, // Add this line to include fines
+//             count: reportedFineCount,
+//             amount: reportedFineAmount,
+//             station: fines[0]?.station || null,
+//             court: fines[0]?.court || null
+//         });
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching reported fines", error });
+//     }
+// };
+
+
 export const getReportedFines = async (req, res) => {
     try {
         const { policeId } = req.params;
-        const fines = await issuedfineModel.find({ policeId }).populate("provision");
+
+        // Validate policeId format
+        if (!mongoose.Types.ObjectId.isValid(policeId)) {
+            return res.status(400).json({ message: "Invalid policeId format" });
+        }
+
+        const fines = await issuedfineModel.find({
+            policeId: mongoose.Types.ObjectId(policeId)
+        }).populate("policeId");
 
         const reportedFineCount = fines.length;
         const reportedFineAmount = fines.reduce((total, fine) => total + fine.totalAmount, 0);
 
         res.status(200).json({
-            fines, // Add this line to include fines
+            fines,
             count: reportedFineCount,
             amount: reportedFineAmount,
             station: fines[0]?.station || null,
             court: fines[0]?.court || null
         });
     } catch (error) {
-        res.status(500).json({ message: "Error fetching reported fines", error });
+        console.error("Error fetching reported fines:", error);
+        res.status(500).json({ message: "Error fetching reported fines", error: error.message });
     }
 };
 

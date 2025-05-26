@@ -155,3 +155,28 @@ export const getAllPolice = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+
+export const getReportedFinesByOfficerName = async (req, res) => {
+  try {
+    const { officerName } = req.params;
+
+    console.log(`Fetching fines for officerName: ${officerName}`);
+
+    const fines = await issuedfineModel.find({ officerName })
+      .populate("provision")
+      .populate("policeId");
+
+    const reportedFineCount = fines.length;
+    const reportedFineAmount = fines.reduce((total, fine) => total + fine.totalAmount, 0);
+
+    res.status(200).json({
+      fines,
+      count: reportedFineCount,
+      amount: reportedFineAmount
+    });
+  } catch (error) {
+    console.error("Error fetching reported fines by officer name:", error);
+    res.status(500).json({ message: "Error fetching reported fines by officer name", error });
+  }
+};
