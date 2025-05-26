@@ -2,7 +2,10 @@ import express from 'express';
 import {
     registerAdmin,
     loginAdmin,
-    getAdminDashboard
+    getAdminDashboard,
+    getPaidFines,
+    downloadTicket,
+    getPendingFiness
 } from '../controllers/adminController.js';
 import {
     addPolice,
@@ -11,7 +14,7 @@ import {
 import upload from '../middlewares/multer.js';
 import authAdmin from '../middlewares/authAdmin.js';
 import { payFine, getAllIssuedFines, getPendingFinesByLicenseId } from '../controllers/issuedfineControler.js';
-import { getAllDrivers } from '../controllers/driverController.js';
+import { getAllDrivers, getPendingFines } from '../controllers/driverController.js';
 
 const adminRouter = express.Router();
 
@@ -30,8 +33,10 @@ adminRouter.get('/police', authAdmin, getAllPolice);
 adminRouter.get('/drivers', authAdmin, getAllDrivers);
 
 // Fine Management (Protected)
-adminRouter.get('/paid-tickets', authAdmin, payFine);
-adminRouter.get('/pending-tickets/:licenseId', authAdmin, getPendingFinesByLicenseId);
+// adminRouter.get('/paid-tickets', authAdmin, payFine);
+adminRouter.get('/pending-tickets', authAdmin, getPendingFiness);
 adminRouter.get('/all-tickets', authAdmin, getAllIssuedFines);
+adminRouter.get('/paid-tickets', authAdmin, getPaidFines);
+adminRouter.get('/download-ticket/:id', authAdmin, downloadTicket);
 
 export default adminRouter;

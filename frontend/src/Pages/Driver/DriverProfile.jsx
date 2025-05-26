@@ -24,7 +24,7 @@ const DriverProfile = () => {
     const [error, setError] = useState("");
 
     const token = localStorage.getItem("driverToken");
-    const licenseId = localStorage.getItem("driverLicenseId");
+    const licenseId = localStorage.getItem("driverId");
 
     useEffect(() => {
         const fetchUserData = async () => {

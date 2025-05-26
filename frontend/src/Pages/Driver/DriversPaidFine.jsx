@@ -19,7 +19,7 @@ const DriversPaidFine = () => {
     useEffect(() => {
         const fetchPaidFines = async () => {
             const token = localStorage.getItem('driverToken');
-            const licenseId = localStorage.getItem('driverLicenseId');
+            const licenseId = localStorage.getItem('driverId');
 
             if (!token || !licenseId) {
                 alert('You are not logged in. Please sign in.');

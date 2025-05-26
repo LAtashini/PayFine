@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiDownload, FiSearch } from 'react-icons/fi';
 import logo from '../../assets/images/logo.png';
@@ -11,40 +11,33 @@ const PendingFine = () => {
     const [activeFilter, setActiveFilter] = useState('all');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
+    const [fines, setFines] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    // Sample data - replace with API data
-    const [fines, setFines] = useState([
-        {
-            id: 'FN001',
-            referenceNo: 'REF-2023-001',
-            licenseId: 'B1234567',
-            policeId: 'PO001',
-            amount: '5000 LKR',
-            issuedDate: '2023-05-15',
-            dueDate: '2023-06-15',
-            status: 'pending'
-        },
-        {
-            id: 'FN002',
-            referenceNo: 'REF-2023-002',
-            licenseId: 'B7654321',
-            policeId: 'PO002',
-            amount: '3000 LKR',
-            issuedDate: '2023-05-18',
-            dueDate: '2023-06-18',
-            status: 'pending'
-        },
-        {
-            id: 'FN003',
-            referenceNo: 'REF-2023-003',
-            licenseId: 'B9876543',
-            policeId: 'PO003',
-            amount: '7000 LKR',
-            issuedDate: '2023-05-20',
-            dueDate: '2023-06-20',
-            status: 'expired'
-        }
-    ]);
+
+    useEffect(() => {
+        const fetchPendingFines = async () => {
+            try {
+                const token = localStorage.getItem("adminToken");
+                const response = await fetch("http://localhost:4000/api/admin/pending-tickets", {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    console.log("Fetched Pending Fines:", data);
+                    setFines(data);
+                } else {
+                    console.error(data.message || "Failed to fetch pending fines");
+                }
+            } catch (error) {
+                console.error("Error fetching pending fines:", error);
+            }
+        };
+
+        fetchPendingFines();
+    }, []);
+
 
     const toggleUserDropdown = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);
@@ -55,32 +48,126 @@ const PendingFine = () => {
         navigate("/AdminSignUp");
     };
 
-    const handleFilterClick = (filter) => {
+    const handleFilterClick = async (filter) => {
         setActiveFilter(filter);
-        // Here you would typically fetch data based on the filter
+        setLoading(true);
+        setError("");
+
+        try {
+            const token = localStorage.getItem("adminToken");
+            let query = "";
+            if (filter === "pending") {
+                query = "?status=unpaid";
+            } else if (filter === "expired") {
+                query = "?status=expired";
+            } else if (filter === "all") {
+                query = "";
+            }
+
+
+            const response = await fetch(`http://localhost:4000/api/admin/pending-tickets${query}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                console.log("Fetched fines for filter:", filter, data);
+                setFines(data);
+            } else {
+                setError(data.message || "Failed to fetch pending fines.");
+            }
+        } catch (err) {
+            console.error("Error fetching filtered fines:", err);
+            setError("Server error while fetching filtered fines.");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleSearch = () => {
-        // Here you would typically fetch data based on the date range
-        console.log('Searching from:', fromDate, 'to:', toDate);
+    const handleSearch = async () => {
+        if (!fromDate || !toDate) {
+            alert("Please select both from and to dates.");
+            return;
+        }
+
+        setLoading(true);
+        setError("");
+
+        try {
+            const token = localStorage.getItem("adminToken");
+            const query = `?fromDate=${fromDate}&toDate=${toDate}`;
+            const response = await fetch(`http://localhost:4000/api/admin/pending-tickets${query}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log("Fetched fines for date range:", data);
+                setFines(data);
+            } else {
+                setError(data.message || "Failed to fetch pending fines for date range.");
+            }
+        } catch (err) {
+            console.error("Error fetching date range fines:", err);
+            setError("Server error fetching pending fines for date range.");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleDownload = (fineId) => {
-        // Handle download logic for the specific fine
-        alert(`Downloading fine ticket ${fineId}`);
+    const handleDownload = async (fineId) => {
+        try {
+            const token = localStorage.getItem("adminToken");
+            const response = await fetch(`http://localhost:4000/api/admin/download-ticket/${fineId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!response.ok) {
+                alert("Failed to download fine ticket.");
+                return;
+            }
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `FineTicket_${fineId}.pdf`;
+            link.click();
+        } catch (err) {
+            console.error("Error downloading fine ticket:", err);
+            // alert("Error downloading fine ticket.");
+        }
     };
 
-    const handleNotifyExpired = () => {
-        // This would call your backend API to send notifications
-        alert('Notifying all drivers with expired fines. This would trigger emails on the server side.');
+    const handleNotifyExpired = async () => {
+        try {
+            const token = localStorage.getItem("adminToken");
+            const response = await fetch(`http://localhost:4000/api/admin/notify-expired`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert(`Successfully notified drivers with expired fines.`);
+            } else {
+                alert(`Failed to notify drivers: ${data.message}`);
+            }
+        } catch (err) {
+            console.error("Error notifying drivers:", err);
+            alert("Error notifying drivers with expired fines.");
+        }
     };
 
-    // Filter fines based on active filter (simplified - you would typically fetch from API)
-    const filteredFines = fines.filter(fine => {
-        if (activeFilter === 'all') return fine.status === 'pending' || fine.status === 'expired';
-        if (activeFilter === 'expired') return fine.status === 'expired';
-        return fine.status === 'pending';
-    });
+
+    // // Filter fines based on active filter (simplified - you would typically fetch from API)
+    // const filteredFines = fines.filter(fine => {
+    //     const fineStatus = fine.status === 'unpaid' ? 'pending' : fine.status;
+    //     if (activeFilter === 'all') return fineStatus === 'pending' || fineStatus === 'expired';
+    //     if (activeFilter === 'pending') return fineStatus === 'pending';
+    //     if (activeFilter === 'expired') return fineStatus === 'expired';
+    //     return true;
+    // });
+
 
     return (
         <div className="flex h-screen bg-gray-100">
@@ -121,15 +208,15 @@ const PendingFine = () => {
                         <Link to="/AllFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             All Fine Tickets
                         </Link>
-                        <Link to="/Feedback" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
+                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Feedback
-                        </Link>
+                        </Link> */}
                     </nav>
                 </div>
 
                 <button
                     onClick={handleLogout}
-                    className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold"
+                    className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold mt-4"
                 >
                     Logout
                 </button>
@@ -139,28 +226,53 @@ const PendingFine = () => {
             <div className="flex-1 flex flex-col">
                 {/* Header - Updated with user dropdown */}
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
-                    <div></div>
-                    <div className="relative">
-                        <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
-                            <img src={userProfilePic} alt="User" className="w-10 h-10 rounded-full" />
-                            <span className="ml-2 text-white">{userName}</span>
-                            <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        {isUserDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                <Link to="/AdminProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
-                                    Admin Profile
-                                </Link>
-                                <button
-                                    onClick={handleLogout}
-                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
-                                >
-                                    Logout
-                                </button>
-                            </div>
-                        )}
+                    <div className="flex items-center">
+                        <span className="text-3xl font-bold">
+                            <span className="text-white">Pay</span>
+                            <span className="text-blue-400">Fine</span>
+                        </span>
+                    </div>
+                    <div className='hidden md:flex space-x-6'>
+
+                        <div className="hidden md:flex items-center space-x-6">
+                            <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
+                                Home
+                            </Link>
+                            <Link to="/AboutUs" className="text-white hover:text-purple-300 transition duration-200">
+                                About Us
+                            </Link>
+                            <Link to="/ContactUs" className="text-white hover:text-purple-300 transition duration-200">
+                                Contact Us
+                            </Link>
+                            <Link to="/help" className="text-white hover:text-purple-300 transition duration-200">
+                                Help
+                            </Link>
+                        </div>
+                        <div className="relative">
+                            <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
+                                <img
+                                    src={'https://www.w3schools.com/howto/img_avatar.png'}
+                                    alt="User Profile"
+                                    className="w-10 h-10 rounded-full"
+                                />                            <span className="ml-2 text-white">{userName}</span>
+                                <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            {isUserDropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                                    <Link to="/AdminProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100">
+                                        Admin Profile
+                                    </Link>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-100"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </header>
 
@@ -178,12 +290,12 @@ const PendingFine = () => {
                                 >
                                     All Pending
                                 </button>
-                                <button
+                                {/* <button
                                     onClick={() => handleFilterClick('pending')}
                                     className={`px-4 py-2 rounded-md ${activeFilter === 'pending' ? 'bg-purple-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                                 >
                                     Active Pending
-                                </button>
+                                </button> */}
                                 <button
                                     onClick={() => handleFilterClick('expired')}
                                     className={`px-4 py-2 rounded-md ${activeFilter === 'expired' ? 'bg-purple-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
@@ -254,11 +366,11 @@ const PendingFine = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {filteredFines.map((fine) => (
-                                        <tr key={fine.id} className={fine.status === 'expired' ? 'bg-red-50' : ''}>
+                                    {fines.map((fine) => (
+                                        <tr key={fine._id} className={fine.status === 'expired' ? 'bg-red-50' : ''}>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <button
-                                                    onClick={() => handleDownload(fine.id)}
+                                                    onClick={() => handleDownload(fine._id)}
                                                     className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100"
                                                     title="Download"
                                                 >
@@ -269,8 +381,12 @@ const PendingFine = () => {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.licenseId}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.policeId}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.amount}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.issuedDate}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.dueDate}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {fine.issuedDate ? new Date(fine.issuedDate).toLocaleDateString() : "N/A"}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                {fine.expiredDate ? new Date(fine.expiredDate).toLocaleDateString() : "N/A"}
+                                            </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm">
                                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${fine.status === 'expired'
                                                     ? 'bg-red-100 text-red-800'
@@ -282,6 +398,7 @@ const PendingFine = () => {
                                         </tr>
                                     ))}
                                 </tbody>
+
                             </table>
                         </div>
                     </div>

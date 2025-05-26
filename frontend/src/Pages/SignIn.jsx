@@ -43,11 +43,12 @@ const SignIn = () => {
 
             if (response.ok) {
                 // Store token
-                const userId = data[role]?._id || data[role]?.id; // Adjust based on your backend
+                const userId = data[role]?._id || data[role]?.id;
                 localStorage.setItem(`${role}Token`, data.token);
+
                 localStorage.setItem(`${role}Name`, data[role]?.name || '');
                 localStorage.setItem(`${role}Pic`, data[role]?.image || '');
-                localStorage.setItem(`${role}Id`, userId); // 🚨 Store user ID
+                localStorage.setItem(`${role}Id`, userId);
                 if (role === 'police') {
                     localStorage.setItem("policeId", data.officer?.id || data.officer?.policeId || '');
 

@@ -1,17 +1,19 @@
-import express from 'express'
-import { changeDriverPassword, getDriverDashboard, getDriverProfile, getPaidFines, getProvisionDetails, registerDriver, updateDriverProfile } from '../controllers/driverController.js'
-import { loginDriver } from '../controllers/driverController.js';
+import express from 'express';
+import authDriver from '../middlewares/authDriver.js';  // Import this!
+import {
+    changeDriverPassword, getDriverDashboard, getDriverProfile,
+    getPaidFines, getProvisionDetails, registerDriver, updateDriverProfile, loginDriver
+} from '../controllers/driverController.js';
 
-const driverRouter = express.Router()
+const driverRouter = express.Router();
 
-driverRouter.post('/dregister', registerDriver)
+driverRouter.post('/dregister', registerDriver);
 driverRouter.post('/login', loginDriver);
-driverRouter.get('/paid/:licenseId', getPaidFines);
-driverRouter.get('/provisions', getProvisionDetails);
-driverRouter.get('/dashboard/:licenseId', getDriverDashboard);
-driverRouter.get('/profile/:licenseId', getDriverProfile);
-driverRouter.patch('/profile/:licenseId', updateDriverProfile);
-driverRouter.patch('/change-password/:licenseId', changeDriverPassword);
-
+driverRouter.get('/paid/:licenseId', authDriver, getPaidFines);  // Protect!
+driverRouter.get('/provisions', authDriver, getProvisionDetails);  // Optional
+driverRouter.get('/dashboard/:licenseId', authDriver, getDriverDashboard);  // Protect!
+driverRouter.get('/profile/:licenseId', authDriver, getDriverProfile);  // Protect!
+driverRouter.patch('/profile/:licenseId', authDriver, updateDriverProfile);  // Protect!
+driverRouter.patch('/change-password/:licenseId', authDriver, changeDriverPassword);  // Protect!
 
 export default driverRouter;

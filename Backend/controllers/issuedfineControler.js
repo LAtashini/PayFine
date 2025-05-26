@@ -61,9 +61,36 @@ export const addIssuedFine = async (req, res) => {
 };
 
 // 2. Get all fines (admin or police)
+// export const getAllIssuedFines = async (req, res) => {
+//     try {
+//         const fines = await issuedfineModel.find()
+//             .populate("provision")
+//             .populate("policeId");
+
+//         res.status(200).json(fines);
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching fines", error });
+//     }
+// };
 export const getAllIssuedFines = async (req, res) => {
     try {
-        const fines = await issuedfineModel.find()
+        const { status, fromDate, toDate } = req.query;
+        const filter = {};
+
+        // Handle status filter if provided
+        if (status) {
+            filter.status = status;  // Directly use status from query
+        }
+
+        // Handle date range filter
+        if (fromDate && toDate) {
+            filter.issuedDate = {
+                $gte: new Date(fromDate),
+                $lte: new Date(toDate)
+            };
+        }
+
+        const fines = await issuedfineModel.find(filter)
             .populate("provision")
             .populate("policeId");
 
@@ -72,6 +99,7 @@ export const getAllIssuedFines = async (req, res) => {
         res.status(500).json({ message: "Error fetching fines", error });
     }
 };
+
 
 // 3. Get fines by license ID (driver-specific)
 export const getFinesByLicenseId = async (req, res) => {
