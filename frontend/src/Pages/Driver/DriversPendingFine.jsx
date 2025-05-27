@@ -7,13 +7,141 @@ const DriversPendingFine = () => {
     const [loading, setLoading] = useState(true);
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const navigate = useNavigate();
-    const userName = "John Doe";
+    const userName = "User";
     const userProfilePic = "https://via.placeholder.com/40";
+    const [driverInfo, setDriverInfo] = useState({});
+    const [name, setName] = useState('Driver');
+
+    useEffect(() => {
+        const token = localStorage.getItem('driverToken');
+        const licenseId = localStorage.getItem('driverLid');
+
+        if (!token || !licenseId) return;
+
+        const fetchDriverProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:4000/api/driver/profile/${licenseId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    setName(data.name);
+                } else {
+                    console.error('Failed to fetch driver profile', data);
+                }
+            } catch (err) {
+                console.error('Error fetching driver profile:', err);
+            }
+        };
+
+        fetchDriverProfile();
+    }, []);
+
+    useEffect(() => {
+        const fetchDriverInfo = async () => {
+            const token = localStorage.getItem('driverToken');
+            const licenseId = localStorage.getItem('driverLid');
+
+            if (!token || !licenseId) {
+                alert('You are not logged in. Please sign in again.');
+                navigate('/signIn/driver');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:4000/api/driver/profile/${licenseId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setDriverInfo(data);
+                } else {
+                    console.error('Error fetching driver info:', data);
+                }
+            } catch (err) {
+                console.error('Error fetching driver info:', err);
+            }
+        };
+
+        fetchDriverInfo();
+    }, [navigate]);
+
+    const handlePayNowWithPayHere = async (fine) => {
+        const token = localStorage.getItem('driverToken');
+        try {
+            // Update fine status to "paid"
+            const response = await fetch(`http://localhost:4000/api/driver/fine/pay/${fine.referenceNo}`, {
+                method: 'PATCH',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                console.error('Error updating fine status:', data.message);
+                alert('Failed to update fine status: ' + (data.message || 'Unknown error'));
+                return;
+            }
+
+            // Proceed to PayHere
+            const merchantId = "1230578";
+            const returnUrl = "http://localhost:3000/payment-success";
+            const cancelUrl = "http://localhost:3000/payment-cancel";
+            const notifyUrl = "http://localhost:3000/payhere-notify";
+
+            const firstName = driverInfo.name?.split(" ")[0] || "First";
+            const lastName = driverInfo.name?.split(" ").slice(1).join(" ") || "Last";
+            const email = driverInfo.email || "example@example.com";
+            const phone = driverInfo.phoneNumber || "0770000000";
+            const address = driverInfo.Address?.address || "Colombo";
+
+            const orderId = fine.referenceNo;
+
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "https://sandbox.payhere.lk/pay/checkout";
+
+            const fields = {
+                merchant_id: merchantId,
+                return_url: returnUrl,
+                cancel_url: cancelUrl,
+                notify_url: notifyUrl,
+                order_id: orderId,
+                items: `Fine Payment - ${fine.provision}`,
+                amount: fine.amount,
+                currency: "LKR",
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                phone: phone,
+                address: address,
+                city: "Colombo",
+                country: "Sri Lanka",
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Server error while updating fine status.');
+        }
+    };
 
     useEffect(() => {
         const fetchPendingFines = async () => {
             const token = localStorage.getItem('driverToken');
-            const licenseId = localStorage.getItem('driverId');
+            const licenseId = localStorage.getItem('driverLid');
 
             if (!token || !licenseId) {
                 alert('You are not logged in. Please sign in again.');
@@ -28,6 +156,7 @@ const DriversPendingFine = () => {
                 const data = await response.json();
 
                 if (response.ok) {
+                    console.log(data);
                     setPendingFines(data);
                 } else {
                     console.error('Error fetching pending fines:', data);
@@ -88,7 +217,7 @@ const DriversPendingFine = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
-                        <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link>
+                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
 
                     </nav>
                 </div>
@@ -144,7 +273,7 @@ const DriversPendingFine = () => {
                                     alt="User Profile"
                                     className="w-10 h-10 rounded-full"
                                 />
-                                <span className="ml-2 text-white">{userName}</span>
+                                <span className="ml-2 text-white">{name}</span>
                                 <svg
                                     className="w-6 h-6 ml-2 text-white"
                                     fill="none"
@@ -202,7 +331,7 @@ const DriversPendingFine = () => {
                                             <tr key={fine._id}>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.referenceNo}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.provision}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.vehicleNumber}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.vehicleNo}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                     {new Date(fine.issuedDate).toLocaleDateString()}
                                                 </td>
@@ -215,11 +344,12 @@ const DriversPendingFine = () => {
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{fine.amount.toFixed(2)}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                     <button
-                                                        onClick={() => navigate('/Payment', { state: { fineDetails: fine } })}
+                                                        onClick={() => handlePayNowWithPayHere(fine)}
                                                         className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
                                                     >
                                                         Pay Now
                                                     </button>
+
                                                 </td>
                                             </tr>
                                         ))

@@ -8,6 +8,7 @@ import policeRouter from './routes/policeRouter.js'
 import driverRouter from './routes/driverRouter.js'
 import revenueRouter from './routes/revenueRouter.js';
 import provisionRoutes from "./routes/provisionRoutes.js";
+import notificationRoutes from './routes/notificationRoutes.js';
 
 
 //app config
@@ -27,6 +28,7 @@ app.use('/api/police', policeRouter)
 app.use('/api/driver', driverRouter)
 app.use('/api/revenue', revenueRouter);
 app.use("/api/admin/provisions", provisionRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
     res.send('API WORKING')

@@ -11,6 +11,33 @@ const DriverProvisionDetails = () => {
     const [provisionData, setProvisionData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [name, setName] = useState('Driver');
+
+    useEffect(() => {
+        const token = localStorage.getItem('driverToken');
+        const licenseId = localStorage.getItem('driverLid');
+
+        if (!token || !licenseId) return;
+
+        const fetchDriverProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:4000/api/driver/profile/${licenseId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    setName(data.name);
+                } else {
+                    console.error('Failed to fetch driver profile', data);
+                }
+            } catch (err) {
+                console.error('Error fetching driver profile:', err);
+            }
+        };
+
+        fetchDriverProfile();
+    }, []);
 
     const toggleUserDropdown = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);
@@ -92,7 +119,7 @@ const DriverProvisionDetails = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
-                        <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link>
+                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
 
                     </nav>
                 </div>
@@ -146,7 +173,7 @@ const DriverProvisionDetails = () => {
                                     alt="User Profile"
                                     className="w-10 h-10 rounded-full"
                                 />
-                                <span className="ml-2 text-white">{userName}</span>
+                                <span className="ml-2 text-white">{name}</span>
                                 <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>

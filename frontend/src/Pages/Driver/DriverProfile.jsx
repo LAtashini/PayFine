@@ -22,9 +22,35 @@ const DriverProfile = () => {
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
-
+    const [name, setName] = useState('Driver');
     const token = localStorage.getItem("driverToken");
-    const licenseId = localStorage.getItem("driverId");
+    const licenseId = localStorage.getItem("driverLid");
+
+    useEffect(() => {
+        const token = localStorage.getItem('driverToken');
+        const licenseId = localStorage.getItem('driverLid');
+
+        if (!token || !licenseId) return;
+
+        const fetchDriverProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:4000/api/driver/profile/${licenseId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    setName(data.name);
+                } else {
+                    console.error('Failed to fetch driver profile', data);
+                }
+            } catch (err) {
+                console.error('Error fetching driver profile:', err);
+            }
+        };
+
+        fetchDriverProfile();
+    }, []);
 
     useEffect(() => {
         const fetchUserData = async () => {

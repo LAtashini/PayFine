@@ -19,7 +19,7 @@ const DriverDashboard = () => {
         const fetchDriverData = async () => {
             const token = localStorage.getItem('driverToken');
             // const licenseId = localStorage.getItem('driverLicenseId');
-            const licenseId = localStorage.getItem('driverId');
+            const licenseId = localStorage.getItem('driverLid');
 
             if (!token || !licenseId) {
                 alert('You are not logged in. Please sign in.');
@@ -77,7 +77,7 @@ const DriverDashboard = () => {
                         <Link to="/DriversPaidFine" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Driver's Paid Fine</Link>
                         <Link to="/DriverProvisionDetails" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Provision Details</Link>
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Notifications</Link>
-                        <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link>
+                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
                     </nav>
                 </div>
                 <button
@@ -96,34 +96,72 @@ const DriverDashboard = () => {
             <div className="flex-1 flex flex-col overflow-auto">
                 {/* Header */}
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
-                    <div className="text-3xl font-bold text-white">Pay<span className="text-blue-400">Fine</span></div>
-                    <div className="relative">
-                        <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
-                            <img
-                                src={'https://www.w3schools.com/howto/img_avatar.png'}
-                                alt="User Profile"
-                                className="w-10 h-10 rounded-full"
-                            />
-                            <span className="ml-2 text-white">{userName}</span>
-                            <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        {isUserDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-slate-400 rounded-md shadow-lg py-1">
-                                <Link to="/Driverprofile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white">Edit Profile</Link>
-                                <button
-                                    onClick={() => {
-                                        localStorage.removeItem('driverToken');
-                                        localStorage.removeItem('driverLicenseId');
-                                        window.location.href = '/';
-                                    }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white"
+                    <div className="flex items-center">
+                        <span className="text-3xl font-bold">
+                            <span className="text-white">Pay</span>
+                            <span className="text-blue-400">Fine</span>
+                        </span>
+                    </div>
+
+                    <div className="flex items-center space-x-6">
+                        {/* Navigation Links */}
+                        <div className="hidden md:flex items-center space-x-6">
+                            <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
+                                Home
+                            </Link>
+                            <Link to="/AboutUs" className="text-white hover:text-purple-300 transition duration-200">
+                                About Us
+                            </Link>
+                            <Link to="/ContactUs" className="text-white hover:text-purple-300 transition duration-200">
+                                Contact Us
+                            </Link>
+                            <Link to="/help" className="text-white hover:text-purple-300 transition duration-200">
+                                Help
+                            </Link>
+                        </div>
+
+                        {/* User Dropdown */}
+                        <div className="relative">
+                            <button
+                                onClick={toggleUserDropdown}
+                                className="flex items-center focus:outline-none"
+                            >
+                                <img
+                                    src={'https://www.w3schools.com/howto/img_avatar.png'}
+                                    alt="User Profile"
+                                    className="w-10 h-10 rounded-full"
+                                />
+                                <span className="ml-2 text-white">{userName}</span>
+                                <svg
+                                    className="w-6 h-6 ml-2 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    Logout
-                                </button>
-                            </div>
-                        )}
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            {isUserDropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-slate-400 rounded-md shadow-lg py-1">
+                                    <Link
+                                        to="/Driverprofile"
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white"
+                                    >
+                                        Edit Profile
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            localStorage.removeItem('authToken');
+                                            window.location.href = '/login';
+                                        }}
+                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-700 hover:text-white"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </header>
 

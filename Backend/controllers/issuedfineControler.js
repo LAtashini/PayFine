@@ -2,6 +2,7 @@ import issuedfineModel from "../models/IssuedFineModels.js";
 import fineModel from "../models/fineModel.js";
 import policeModel from "../models/policeModel.js";
 import mongoose from "mongoose";  // Add this import if missing
+import Notification from '../models/notification.js';
 
 // 1. Police adds a new issued fine
 export const addIssuedFine = async (req, res) => {
@@ -9,8 +10,8 @@ export const addIssuedFine = async (req, res) => {
         const {
             driverName,
             address,
-            licenseId,       // ✅ Match frontend's `licenseId`
-            vehicleNo,       // ✅ Match frontend's `vehicleNo`
+            licenseId,
+            vehicleNo,
             vehicleClass,
             nic,
             policeId,
@@ -27,14 +28,13 @@ export const addIssuedFine = async (req, res) => {
             totalAmount
         } = req.body;
 
-        // Generate a unique reference number
         const referenceNo = `REF-${Date.now()}`;
 
         const newFine = new issuedfineModel({
             referenceNo,
             policeId,
-            licenseId,         // ✅ Now correctly assigned
-            vehicleNo,         // ✅ Now correctly assigned
+            licenseId,
+            vehicleNo,
             issuedDate,
             issuedTime,
             expiredDate,
@@ -54,7 +54,26 @@ export const addIssuedFine = async (req, res) => {
         });
 
         await newFine.save();
-        res.status(201).json({ message: "Fine issued successfully", fine: newFine });
+
+        const notification = new Notification({
+            nic: nic,
+            referenceNo: referenceNo,
+            provision: provision,
+            vehicleNumber: vehicleNo,
+            issuedDate: issuedDate,
+            courtDate: courtDate,
+            amount: amount,
+            status: "unpaid"
+        });
+
+        await notification.save();
+
+        res.status(201).json({
+            message: "Fine issued and notification created successfully",
+            fine: newFine,
+            notification: notification
+        });
+
     } catch (error) {
         console.error("Error issuing fine:", error);
         res.status(500).json({ message: "Error issuing fine", error });
@@ -117,7 +136,8 @@ export const getFinesByLicenseId = async (req, res) => {
 };
 
 // 4. Mark fine as paid
-export const payFine = async (req, res) => {
+// PATCH /api/issuedfines/pay/:referenceNo
+export const markFineAsPaid = async (req, res) => {
     try {
         const { referenceNo } = req.params;
 
@@ -126,13 +146,15 @@ export const payFine = async (req, res) => {
             return res.status(404).json({ message: "Fine not found" });
         }
 
+        // Update status to paid and add payment date
         fine.status = "paid";
         fine.paidDate = new Date();
 
         await fine.save();
         res.status(200).json({ message: "Fine marked as paid", fine });
     } catch (error) {
-        res.status(500).json({ message: "Error updating fine", error });
+        console.error("Error marking fine as paid:", error);
+        res.status(500).json({ message: "Error marking fine as paid", error: error.message });
     }
 };
 

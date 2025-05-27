@@ -326,33 +326,53 @@ const AddNewFine = () => {
                 {/* Header */}
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div>
-                        {/* Add your logo here */}
+                        <span className="text-3xl font-bold">
+                            <span className="text-white">Pay</span>
+                            <span className="text-blue-400">Fine</span>
+                        </span>
                     </div>
-                    <div className="relative">
-                        <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
-                            <img
-                                src={'https://www.w3schools.com/howto/img_avatar.png'}
-                                alt="User Profile"
-                                className="w-10 h-10 rounded-full"
-                            />
-                            <span className="ml-2 text-white">{officerName}</span>
-                            <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        {isUserDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
-                                <Link to="/PolicemanProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-100">
-                                    Edit Profile
-                                </Link>
-                                <button
-                                    onClick={() => alert('Logout clicked')}
-                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-100"
-                                >
-                                    Logout
-                                </button>
-                            </div>
-                        )}
+                    <div className="flex items-center space-x-6">
+
+                        <div className="hidden md:flex items-center space-x-6">
+                            <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
+                                Home
+                            </Link>
+                            <Link to="/AboutUs" className="text-white hover:text-purple-300 transition duration-200">
+                                About Us
+                            </Link>
+                            <Link to="/ContactUs" className="text-white hover:text-purple-300 transition duration-200">
+                                Contact Us
+                            </Link>
+                            <Link to="/help" className="text-white hover:text-purple-300 transition duration-200">
+                                Help
+                            </Link>
+                        </div>
+                        <div className="relative">
+                            <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
+                                <img
+                                    src={'https://www.w3schools.com/howto/img_avatar.png'}
+                                    alt="User Profile"
+                                    className="w-10 h-10 rounded-full"
+                                />
+                                <span className="ml-2 text-white">{officerName}</span>
+                                <svg className="w-6 h-6 ml-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            {isUserDropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                                    <Link to="/PolicemanProfile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-100">
+                                        Edit Profile
+                                    </Link>
+                                    <button
+                                        onClick={() => alert('Logout clicked')}
+                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-100"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </header>
 

@@ -25,7 +25,7 @@ import PendingFine from './Pages/Admin/PendingFine'; //import pending fine page
 import AllFine from './Pages/Admin/AllFine'; //import all fine page
 import DriversPaidFine from './Pages/Driver/DriversPaidFine';
 import DriverProvisionDetails from './Pages/Driver/DriverProvisionDetails';
-import Feedback from './Pages/Admin/Feedback';
+import Feedback from './Pages/Driver/Feedback';
 import Notification from './Pages/Driver/Notification';
 
 

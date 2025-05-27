@@ -2,8 +2,10 @@ import express from 'express';
 import authDriver from '../middlewares/authDriver.js';  // Import this!
 import {
     changeDriverPassword, getDriverDashboard, getDriverProfile,
-    getPaidFines, getProvisionDetails, registerDriver, updateDriverProfile, loginDriver
+    getPaidFines, getProvisionDetails, registerDriver, updateDriverProfile, loginDriver,
+    getPendingFines
 } from '../controllers/driverController.js';
+import { markFineAsPaid } from '../controllers/issuedfineControler.js';
 
 const driverRouter = express.Router();
 
@@ -15,5 +17,7 @@ driverRouter.get('/dashboard/:licenseId', authDriver, getDriverDashboard);  // P
 driverRouter.get('/profile/:licenseId', authDriver, getDriverProfile);  // Protect!
 driverRouter.patch('/profile/:licenseId', authDriver, updateDriverProfile);  // Protect!
 driverRouter.patch('/change-password/:licenseId', authDriver, changeDriverPassword);  // Protect!
+driverRouter.get('/pending/:licenseId', authDriver, getPendingFines);
+driverRouter.patch('/fine/pay/:referenceNo', authDriver, markFineAsPaid);  // 🔥
 
 export default driverRouter;

@@ -13,7 +13,7 @@ import {
 } from '../controllers/policeController.js';
 import upload from '../middlewares/multer.js';
 import authAdmin from '../middlewares/authAdmin.js';
-import { payFine, getAllIssuedFines, getPendingFinesByLicenseId } from '../controllers/issuedfineControler.js';
+import { getAllIssuedFines, getPendingFinesByLicenseId } from '../controllers/issuedfineControler.js';
 import { getAllDrivers, getPendingFines } from '../controllers/driverController.js';
 
 const adminRouter = express.Router();

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import logo from '../../assets/images/logo.png';
+import jsPDF from 'jspdf';
+import "jspdf-autotable";
 
 const DriversPaidFine = () => {
     const [paidFines, setPaidFines] = useState([]);
@@ -15,11 +17,40 @@ const DriversPaidFine = () => {
     const [endDate, setEndDate] = useState(null);
     const userName = "John Doe";
     const userProfilePic = "https://via.placeholder.com/40";
+    const [name, setName] = useState('Driver');
+
+    useEffect(() => {
+        const token = localStorage.getItem('driverToken');
+        const licenseId = localStorage.getItem('driverLid');
+
+        if (!token || !licenseId) return;
+
+        const fetchDriverProfile = async () => {
+            try {
+                const response = await fetch(`http://localhost:4000/api/driver/profile/${licenseId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    setName(data.name);
+                } else {
+                    console.error('Failed to fetch driver profile', data);
+                }
+            } catch (err) {
+                console.error('Error fetching driver profile:', err);
+            }
+        };
+
+        fetchDriverProfile();
+    }, []);
+
+
 
     useEffect(() => {
         const fetchPaidFines = async () => {
             const token = localStorage.getItem('driverToken');
-            const licenseId = localStorage.getItem('driverId');
+            const licenseId = localStorage.getItem('driverLid');
 
             if (!token || !licenseId) {
                 alert('You are not logged in. Please sign in.');
@@ -138,6 +169,27 @@ const DriversPaidFine = () => {
         );
     }
 
+
+    const generateReceipt = (fine) => {
+        const doc = new jsPDF();
+
+        doc.setFontSize(16);
+        doc.text('Fine Payment Receipt', 105, 20, null, null, 'center');
+
+        doc.setFontSize(12);
+        doc.text(`Reference No: ${fine.referenceNo}`, 20, 40);
+        doc.text(`Provision: ${fine.provision}`, 20, 50);
+        doc.text(`Vehicle Number: ${fine.vehicleNo}`, 20, 60);
+        doc.text(`Issued Date: ${new Date(fine.issuedDate).toLocaleDateString()}`, 20, 70);
+        doc.text(`Paid Date: ${fine.paidDate ? new Date(fine.paidDate).toLocaleDateString() : 'N/A'}`, 20, 80);
+        doc.text(`Amount Paid (LKR): ${fine.amount.toFixed(2)}`, 20, 90);
+
+        doc.text('Thank you for your payment!', 20, 110);
+
+        doc.save(`FineReceipt-${fine.referenceNo}.pdf`);
+    };
+
+
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
@@ -167,7 +219,7 @@ const DriversPaidFine = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
-                        <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link>
+                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
 
                     </nav>
                 </div>
@@ -176,7 +228,7 @@ const DriversPaidFine = () => {
                 <button
                     onClick={() => {
                         localStorage.removeItem('driverToken');
-                        localStorage.removeItem('driverLicenseId');
+                        localStorage.removeItem('driverLid');
                         window.location.href = '/';
                     }}
                     className="block w-full py-2.5 px-4 rounded transition duration-200 bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
@@ -224,7 +276,7 @@ const DriversPaidFine = () => {
                                     alt="User Profile"
                                     className="w-10 h-10 rounded-full"
                                 />
-                                <span className="ml-2 text-white">{userName}</span>
+                                <span className="ml-2 text-white">{name}</span>
                                 <svg
                                     className="w-6 h-6 ml-2 text-white"
                                     fill="none"
@@ -376,9 +428,7 @@ const DriversPaidFine = () => {
                                             <tr key={fine._id}>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                     <button
-                                                        onClick={() => {
-                                                            alert(`Viewing receipt for ${fine.referenceNo}`);
-                                                        }}
+                                                        onClick={() => generateReceipt(fine)}
                                                         className="text-purple-600 hover:text-purple-900"
                                                     >
                                                         View Receipt
@@ -391,7 +441,7 @@ const DriversPaidFine = () => {
                                                     {fine.provision}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                    {fine.vehicleNumber}
+                                                    {fine.vehicleNo}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                     {new Date(fine.issuedDate).toLocaleDateString()}

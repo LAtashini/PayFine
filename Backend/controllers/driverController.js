@@ -200,6 +200,7 @@ export const getDriverDashboard = async (req, res) => {
 
 
 // GET /api/driver/profile/:licenseId
+// GET /api/driver/profile/:licenseId
 export const getDriverProfile = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -209,12 +210,19 @@ export const getDriverProfile = async (req, res) => {
             return res.status(404).json({ message: "Driver not found" });
         }
 
-        res.status(200).json(driver);
+        // Convert to a plain JS object
+        const driverObject = driver.toObject();
+
+        // Add a new 'nic' field (mapped from IDNumber)
+        driverObject.nic = driver.IDNumber;
+
+        res.status(200).json(driverObject);
     } catch (error) {
         console.error("Error fetching profile:", error);
         res.status(500).json({ message: "Error fetching profile", error: error.message });
     }
 };
+
 
 // PATCH /api/driver/profile/:licenseId
 export const updateDriverProfile = async (req, res) => {

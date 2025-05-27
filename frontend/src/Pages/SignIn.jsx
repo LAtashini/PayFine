@@ -43,6 +43,7 @@ const SignIn = () => {
 
             if (response.ok) {
                 // Store token
+                console.log(data)
                 const userId = data[role]?._id || data[role]?.id;
                 localStorage.setItem(`${role}Token`, data.token);
 
@@ -53,6 +54,10 @@ const SignIn = () => {
                     localStorage.setItem("policeId", data.officer?.id || data.officer?.policeId || '');
                     localStorage.setItem("policeOfficerName", data.police?.name);
 
+                }
+                if (role === 'driver') {
+                    localStorage.setItem("driverLid", data.driver?.LicenseNumber);
+                    localStorage.setItem("driverNIC", data.driver?.IDNumber || data.driver?.nic);
                 }
 
 
