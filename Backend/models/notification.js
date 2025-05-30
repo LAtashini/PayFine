@@ -4,8 +4,8 @@ import mongoose from 'mongoose';
 const notificationSchema = new mongoose.Schema({
     nic: { type: String, required: true },
     referenceNo: { type: String, required: true },
-    provision: { type: String },  // Store provision name directly
-    provisionAmount: { type: String },  // Store fine amount directly
+    provision: { type: String },  
+    provisionAmount: { type: String },  
     vehicleNumber: { type: String, required: true },
     issuedDate: { type: Date, required: true },
     courtDate: { type: Date },
