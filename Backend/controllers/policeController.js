@@ -2,40 +2,37 @@ import Police from "../models/policeModel.js";
 import bcrypt from "bcryptjs";
 import issuedfineModel from "../models/IssuedFineModels.js";
 
-// Admin adds police officer
+
 export const addPolice = async (req, res) => {
   try {
     const { officerId, email, password, name, PoliceStation, court, registeredDate } = req.body;
 
-    // Basic validation
+    
     if (!officerId || !email || !password || !name || !PoliceStation || !court || !registeredDate) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Optional: Check for duplicate officer ID or email
+    
     const existingOfficer = await Police.findOne({ $or: [{ policeId: officerId }, { email }] });
     if (existingOfficer) {
       return res.status(400).json({ message: "Officer with this ID or email already exists" });
     }
 
-    // Hash password
+  
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Optional: handle image upload
-    // const image = req.file ? req.file.path : "";
-
-    // Create new police officer
+    
     const newOfficer = new Police({
       policeId: officerId,
       email,
       password: hashedPassword,
       name,
-      station: PoliceStation, // Map PoliceStation to station field
+      station: PoliceStation, 
       court,
       registeredDate,
       code: "POLICE" + Date.now(),
       status: "active",
-      // image, // Optional image if implemented
+      
     });
 
     await newOfficer.save();
@@ -46,7 +43,6 @@ export const addPolice = async (req, res) => {
   }
 };
 
-// Police login
 export const policeLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -79,7 +75,7 @@ export const policeLogin = async (req, res) => {
   }
 };
 
-// Get police officer's own profile
+
 export const getPoliceProfile = async (req, res) => {
   try {
     const policeId = req.params.id;
@@ -96,7 +92,7 @@ export const getPoliceProfile = async (req, res) => {
   }
 };
 
-// Update police officer's own profile
+
 export const updatePoliceProfile = async (req, res) => {
   try {
     const policeId = req.params.id;
@@ -119,7 +115,7 @@ export const updatePoliceProfile = async (req, res) => {
   }
 };
 
-// Get police officer's dashboard data
+
 export const getPoliceDashboard = async (req, res) => {
   try {
     const policeId = req.params.id;
@@ -145,7 +141,7 @@ export const getPoliceDashboard = async (req, res) => {
   }
 };
 
-// Admin - Get all police officers
+
 export const getAllPolice = async (req, res) => {
   try {
     const officers = await Police.find().select("-password");
