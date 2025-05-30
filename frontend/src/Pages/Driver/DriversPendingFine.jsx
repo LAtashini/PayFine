@@ -70,7 +70,7 @@ const DriversPendingFine = () => {
     const handlePayNowWithPayHere = async (fine) => {
         const token = localStorage.getItem('driverToken');
         try {
-            // Update fine status to "paid"
+            
             const response = await fetch(`http://localhost:4000/api/driver/fine/pay/${fine.referenceNo}`, {
                 method: 'PATCH',
                 headers: {
@@ -85,7 +85,7 @@ const DriversPendingFine = () => {
                 return;
             }
 
-            // Proceed to PayHere
+            
             const merchantId = "1230578";
             const returnUrl = "http://localhost:3000/payment-success";
             const cancelUrl = "http://localhost:3000/payment-cancel";
@@ -191,7 +191,7 @@ const DriversPendingFine = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+    
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -217,7 +217,7 @@ const DriversPendingFine = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
+                        
 
                     </nav>
                 </div>
@@ -234,9 +234,9 @@ const DriversPendingFine = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+
             <div className="flex-1 flex flex-col overflow-auto">
-                {/* Updated Header */}
+
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
@@ -246,7 +246,7 @@ const DriversPendingFine = () => {
                     </div>
 
                     <div className="flex items-center space-x-6">
-                        {/* Navigation Links */}
+                
                         <div className="hidden md:flex items-center space-x-6">
                             <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
                                 Home
@@ -262,7 +262,7 @@ const DriversPendingFine = () => {
                             </Link>
                         </div>
 
-                        {/* User Dropdown */}
+            
                         <div className="relative">
                             <button
                                 onClick={toggleUserDropdown}
