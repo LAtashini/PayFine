@@ -1,4 +1,4 @@
-// models/provisionModel.js
+
 import mongoose from "mongoose";
 
 const provisionSchema = new mongoose.Schema({
