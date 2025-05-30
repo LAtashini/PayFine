@@ -1,7 +1,7 @@
-// controllers/provisionController.js
+
 import Provision from "../models/provisionModel.js";
 
-// Create
+
 export const addProvision = async (req, res) => {
     try {
         const { provisionId, sectionOfAct, fineAmount } = req.body;
@@ -13,14 +13,13 @@ export const addProvision = async (req, res) => {
     }
 };
 
-// Read all
 export const getAllProvisions = async (req, res) => {
     try {
         const provisions = await Provision.find();
         const formatted = provisions.map(prov => ({
             fineId: prov.provisionId,
             section: prov.sectionOfAct,
-            provision: `Provision for ${prov.sectionOfAct}`,  // Add meaningful text
+            provision: `Provision for ${prov.sectionOfAct}`,  
             amount: prov.fineAmount
         }));
         res.status(200).json(formatted);
@@ -30,7 +29,7 @@ export const getAllProvisions = async (req, res) => {
 };
 
 
-// Update
+
 export const updateProvision = async (req, res) => {
     try {
         const updated = await Provision.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -41,7 +40,7 @@ export const updateProvision = async (req, res) => {
     }
 };
 
-// Delete
+
 export const deleteProvision = async (req, res) => {
     try {
         const deleted = await Provision.findByIdAndDelete(req.params.id);
