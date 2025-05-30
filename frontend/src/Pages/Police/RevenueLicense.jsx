@@ -24,7 +24,7 @@ const RevenueLicense = () => {
     const formatDate = (isoString) => {
         if (!isoString) return '';
         const date = new Date(isoString);
-        return date.toISOString().split('T')[0]; // "yyyy-MM-dd"
+        return date.toISOString().split('T')[0]; 
     };
 
 
@@ -140,10 +140,10 @@ const RevenueLicense = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
-                    {/* Updated Logo Section */}
+                    
                     <div className="flex flex-col items-center mb-6">
                         <img src={logo} alt="PayFine Logo" className="h-12 w-12 rounded-full border-2 border-white mb-2" />
                         <span className="text-2xl font-semibold">
@@ -165,17 +165,13 @@ const RevenueLicense = () => {
                         <Link to="/RevenueLicense" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Revenue License
                         </Link>
-                        {/* <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
-                            View Reported Fine
-                        </Link> */}
+                        
                     </nav>
                 </div>
-
-                {/* Logout Button at the bottom */}
                 <button
                     onClick={() => {
                         localStorage.removeItem("authToken");
-                        localStorage.removeItem("policeId"); // Clear policeId too
+                        localStorage.removeItem("policeId"); 
                         window.location.href = "/";
                     }}
                     className="block w-full py-2.5 px-4 rounded bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
@@ -184,9 +180,9 @@ const RevenueLicense = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+            
             <div className="flex-1 flex flex-col overflow-auto">
-                {/* Header */}
+                
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div>
                         <span className="text-3xl font-bold">
@@ -238,11 +234,11 @@ const RevenueLicense = () => {
                     </div>
                 </header>
 
-                {/* Body */}
+                
                 <main className="flex-1 p-6 bg-gray-300 overflow-auto">
                     <h1 className="text-2xl font-semibold text-purple-900 mb-6">Revenue License</h1>
 
-                    {/* Search Section */}
+                    
                     <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                         <h2 className="text-xl font-semibold text-purple-800 mb-4">Search License</h2>
                         <div className="flex items-center">
@@ -262,7 +258,7 @@ const RevenueLicense = () => {
                         </div>
                     </div>
 
-                    {/* License Details Form */}
+                
                     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
                         <h2 className="text-xl font-semibold text-purple-800 mb-4">License Details</h2>
 
@@ -380,7 +376,7 @@ const RevenueLicense = () => {
                             </div>
                         </div>
 
-                        {/* Submit Button */}
+                    
                         <div className="flex justify-end mt-6">
                             <button
                                 type="submit"
