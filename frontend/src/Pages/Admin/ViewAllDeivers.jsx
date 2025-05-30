@@ -18,7 +18,7 @@ const ViewAllDrivers = () => {
     useEffect(() => {
         const fetchDrivers = async () => {
             try {
-                const token = localStorage.getItem("adminToken"); // 🔥 Replace with actual token key
+                const token = localStorage.getItem("adminToken"); 
                 const response = await fetch('http://localhost:4000/api/admin/drivers', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -112,10 +112,10 @@ const ViewAllDrivers = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar - Updated with logo and consistent styling */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
-                    {/* Updated Logo Section */}
+                    
                     <div className="flex flex-col items-center mb-6">
                         <img src={logo} alt="PayFine Logo" className="h-12 w-12 rounded-full border-2 border-white mb-2" />
                         <span className="text-2xl font-semibold">
@@ -149,9 +149,7 @@ const ViewAllDrivers = () => {
                         <Link to="/AllFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             All Fine Tickets
                         </Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
-                            Feedback
-                        </Link> */}
+            
                     </nav>
                 </div>
 
@@ -163,9 +161,9 @@ const ViewAllDrivers = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+        
             <div className="flex-1 flex flex-col">
-                {/* Header - Updated with user dropdown */}
+                
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
@@ -217,7 +215,7 @@ const ViewAllDrivers = () => {
                     </div>
                 </header>
 
-                {/* Body with Drivers Table */}
+                
                 <main className="flex-1 p-6 bg-gray-100 overflow-auto">
                     <div className="bg-white rounded-lg shadow p-6">
                         <h1 className="text-2xl font-semibold text-blue-800 mb-6">All Drivers</h1>
