@@ -25,7 +25,6 @@ import PendingFine from './Pages/Admin/PendingFine';
 import AllFine from './Pages/Admin/AllFine'; 
 import DriversPaidFine from './Pages/Driver/DriversPaidFine';
 import DriverProvisionDetails from './Pages/Driver/DriverProvisionDetails';
-import Feedback from './Pages/Driver/Feedback';
 import Notification from './Pages/Driver/Notification';
 
 
@@ -59,7 +58,6 @@ const App = () => {
           <Route path="/PaidFine" element={<PaidFine />} />
           <Route path="/PendingFine" element={<PendingFine />} />
           <Route path="/AllFine" element={<AllFine />} />
-          <Route path="/Feedback" element={<Feedback />} />
           <Route path="/Notifications" element={<Notification />} />
 
         </Routes>
