@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Header from '../components/Header';
-import Footer from '../components/Footer'; // Adjust path as needed
+import Footer from '../components/Footer'; 
 
 const Help = () => {
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -8,7 +8,7 @@ const Help = () => {
     const [inputMessage, setInputMessage] = useState('');
     const messagesEndRef = useRef(null);
 
-    // Sample automated responses
+
     const automatedResponses = [
         "How can I assist you with your fine payment?",
         "You can pay your fines using credit/debit cards or online banking.",
@@ -17,7 +17,7 @@ const Help = () => {
         "Thank you for contacting our support."
     ];
 
-    // Scroll to bottom of chat when messages update
+    
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -71,7 +71,7 @@ const Help = () => {
                         </div>
                     </div>
 
-                    {/* Floating Help Button */}
+                
                     <button
                         onClick={toggleChat}
                         className="fixed bottom-8 right-8 bg-purple-600 hover:bg-purple-700 text-white font-medium py-3 px-6 rounded-full shadow-lg transition-colors duration-200 flex items-center z-50"
@@ -93,7 +93,7 @@ const Help = () => {
                         )}
                     </button>
 
-                    {/* Chatbox */}
+            
                     {isChatOpen && (
                         <div className="fixed bottom-24 right-8 w-96 bg-white rounded-lg shadow-xl border border-gray-200 flex flex-col z-50">
                             <div className="bg-puprle-600 text-white p-4 rounded-t-lg flex justify-between items-center">
