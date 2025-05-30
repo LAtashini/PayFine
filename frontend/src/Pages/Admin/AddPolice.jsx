@@ -101,7 +101,7 @@ const AddPolice = () => {
                         <Link to="/PaidFine" className="block py-2.5 px-4 bg-purple-800 rounded hover:bg-purple-900 text-center font-bold">Paid Fine Tickets</Link>
                         <Link to="/PendingFine" className="block py-2.5 px-4 bg-purple-800 rounded hover:bg-purple-900 text-center font-bold">Pending Fine Tickets</Link>
                         <Link to="/AllFine" className="block py-2.5 px-4 bg-purple-800 rounded hover:bg-purple-900 text-center font-bold">All Fine Tickets</Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 bg-purple-800 rounded hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
+                        
                     </nav>
                 </div>
                 <button
