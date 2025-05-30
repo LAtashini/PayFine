@@ -1,28 +1,28 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './Pages/Home'; // Import the Home page
-import SignIn from './Pages/SignIn';// Import the SignUp page
-import AboutUs from './Pages/AboutUs'; // import aboutus page
-import ContactUs from './Pages/ContactUs';// import contact us page
-import Help from './Pages/Help'; // import help page
-import SignUp from './Pages/Driver/SignUp'; // Import the SingUp page
-import DriverDashboard from './Pages/Driver/DriverDashboard';// import the User Dshboard page
-import DriversPendingFine from './Pages/Driver/DriversPendingFine'; //import Driving pending page
-import DriverProfile from './Pages/Driver/DriverProfile';// import the User Profile page
-import PoliceDashboard from './Pages/Police/PoliceDashboard';//import police dashboard page
-import DriversPastFine from './Pages/Police/DriversPastFine'; //import drivers past fime page
-import AddNewFine from './Pages/Police/AddNewFine';//import add new fines
-import RevenueLicense from './Pages/Police/RevenueLicense'; // import revenue license page
-import ViewReportedFine from './Pages/Police/ViewReportedFine';// import view reported fine page
-import AdminSignUp from './Pages/Admin/AdminSignUp'; // import admin sign up page
-import AdminDashboard from './Pages/Admin/AdminDashboard';// import admin dashboard page
-import AddPolice from './Pages/Admin/AddPolice'; // import add pice officer page
-import ViewAllPolice from './Pages/Admin/ViewAllPolice'; //import view all police page
-import ProvisionDetails from "./Pages/Admin/ProvisionDetails"; // import Provision details page
-import ViewAllDrivers from './Pages/Admin/ViewAllDeivers'; // import the view drivers page
-import PaidFine from './Pages/Admin/PaidFine'; // import paid fine page
-import PendingFine from './Pages/Admin/PendingFine'; //import pending fine page
-import AllFine from './Pages/Admin/AllFine'; //import all fine page
+import Home from './Pages/Home'; 
+import SignIn from './Pages/SignIn';
+import AboutUs from './Pages/AboutUs'; 
+import ContactUs from './Pages/ContactUs';
+import Help from './Pages/Help'; 
+import SignUp from './Pages/Driver/SignUp'; 
+import DriverDashboard from './Pages/Driver/DriverDashboard';
+import DriversPendingFine from './Pages/Driver/DriversPendingFine'; 
+import DriverProfile from './Pages/Driver/DriverProfile';
+import PoliceDashboard from './Pages/Police/PoliceDashboard';
+import DriversPastFine from './Pages/Police/DriversPastFine'; 
+import AddNewFine from './Pages/Police/AddNewFine';
+import RevenueLicense from './Pages/Police/RevenueLicense'; 
+import ViewReportedFine from './Pages/Police/ViewReportedFine';
+import AdminSignUp from './Pages/Admin/AdminSignUp'; 
+import AdminDashboard from './Pages/Admin/AdminDashboard';
+import AddPolice from './Pages/Admin/AddPolice'; 
+import ViewAllPolice from './Pages/Admin/ViewAllPolice'; 
+import ProvisionDetails from "./Pages/Admin/ProvisionDetails"; 
+import ViewAllDrivers from './Pages/Admin/ViewAllDeivers'; 
+import PaidFine from './Pages/Admin/PaidFine'; 
+import PendingFine from './Pages/Admin/PendingFine'; 
+import AllFine from './Pages/Admin/AllFine'; 
 import DriversPaidFine from './Pages/Driver/DriversPaidFine';
 import DriverProvisionDetails from './Pages/Driver/DriverProvisionDetails';
 import Feedback from './Pages/Driver/Feedback';
