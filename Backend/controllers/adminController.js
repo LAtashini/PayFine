@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 import PDFDocument from 'pdfkit';
 import { Readable } from 'stream';
 
-// Admin Registration
 export const registerAdmin = async (req, res) => {
     try {
         const { name, PoliceStation, email, password, confirmPassword, NIC, address, gender } = req.body;
@@ -34,14 +33,14 @@ export const registerAdmin = async (req, res) => {
             PoliceStation,
             email,
             password: hashedPassword,
-            image: "",  // Optionally handle image upload later
+            image: "",  
             code: "ADMIN" + Date.now(),
             status: "active"
         });
 
         await newAdmin.save();
 
-        // Generate JWT token
+        
         const token = jwt.sign(
             { id: newAdmin._id, role: 'admin' },
             process.env.JWT_SECRET,
@@ -59,7 +58,6 @@ export const registerAdmin = async (req, res) => {
     }
 };
 
-// Admin Login
 export const loginAdmin = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -74,7 +72,7 @@ export const loginAdmin = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        // Generate JWT token
+        
         const token = jwt.sign(
             { id: admin._id, role: admin.role },
             process.env.JWT_SECRET,
@@ -91,8 +89,6 @@ export const loginAdmin = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
-
-// Admin Dashboard Summary
 export const getAdminDashboard = async (req, res) => {
     try {
         const totalOfficers = await Police.countDocuments();
@@ -142,7 +138,7 @@ export const downloadTicket = async (req, res) => {
             return res.status(404).json({ message: 'Fine not found' });
         }
 
-        // Generate a simple PDF with fine details
+        
         const doc = new PDFDocument();
         let buffers = [];
         doc.on('data', buffers.push.bind(buffers));
@@ -174,13 +170,13 @@ export const getPendingFiness = async (req, res) => {
         const { fromDate, toDate, status } = req.query;
         const filter = {};
 
-        // 🔥 Dynamic Status Filtering
+        
         if (status === 'unpaid' || status === 'pending') {
             filter.status = 'unpaid';
         } else if (status === 'expired') {
             filter.status = 'expired';
         } else {
-            // 🔥 If no status specified, return all pending and expired
+        
             const filter = { status: { $in: ['unpaid', 'pending', 'expired'] } };
         }
 
