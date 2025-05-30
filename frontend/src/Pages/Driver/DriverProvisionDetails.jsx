@@ -92,7 +92,7 @@ const DriverProvisionDetails = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar - matching DriverDashboard exactly */}
+
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -119,12 +119,12 @@ const DriverProvisionDetails = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
+        
 
                     </nav>
                 </div>
 
-                {/* Logout Button at the bottom */}
+        
                 <button
                     onClick={() => {
                         localStorage.removeItem('driverToken');
@@ -137,19 +137,19 @@ const DriverProvisionDetails = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+            
             <div className="flex-1 flex flex-col">
-                {/* Header */}
+            
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
                             <span className="text-white">Pay</span>
                             <span className="text-blue-400">Fine</span>
                         </span>
-                    </div> {/* Empty div for balance */}
+                    </div> 
 
                     <div className="flex items-center space-x-6">
-                        {/* Navigation Links */}
+        
                         <div className="hidden md:flex items-center space-x-6">
                             <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
                                 Home
@@ -165,7 +165,7 @@ const DriverProvisionDetails = () => {
                             </Link>
                         </div>
 
-                        {/* User Dropdown */}
+                        
                         <div className="relative">
                             <button onClick={toggleUserDropdown} className="flex items-center focus:outline-none">
                                 <img
@@ -195,7 +195,7 @@ const DriverProvisionDetails = () => {
                     </div>
                 </header>
 
-                {/* Body */}
+    
                 <main className="flex-1 p-6 bg-gray-300 overflow-auto">
                     <div className="bg-white rounded-lg shadow-md p-6">
                         <h2 className="text-xl font-semibold text-gray-800 mb-4">Provision Details</h2>
