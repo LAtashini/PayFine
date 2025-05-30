@@ -60,14 +60,13 @@ const DriversPastFine = () => {
         fetchOfficerAndFines();
     }, []);
 
-    // 🔍 Filter fines based on licenseNumber input
     const filteredFines = licenseNumber
         ? pastFines.filter(fine => fine.licenseId?.toLowerCase().includes(licenseNumber.toLowerCase()))
         : pastFines;
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -79,7 +78,7 @@ const DriversPastFine = () => {
                         <Link to="/AddNewFine" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Add New Fine</Link>
                         <Link to="/DriversPastFine" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Drivers Past Fines</Link>
                         <Link to="/RevenueLicense" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Revenue License</Link>
-                        {/* <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">View Reported Fine</Link> */}
+                
                     </nav>
                 </div>
                 <button
@@ -94,7 +93,7 @@ const DriversPastFine = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+        
             <div className="flex-1 flex flex-col">
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div>
