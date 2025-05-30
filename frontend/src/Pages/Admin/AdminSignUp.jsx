@@ -39,7 +39,7 @@ const AdminSignUp = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Save token in localStorage under a consistent key
+                
                 localStorage.setItem('adminToken', data.token);
                 alert('Admin registered successfully!');
                 navigate('/AdminDashboard');
