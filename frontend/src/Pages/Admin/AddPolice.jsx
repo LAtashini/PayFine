@@ -13,7 +13,7 @@ const AddPolice = () => {
         password: '',
         confirmPassword: '',
         name: '',
-        PoliceStation: '',  // Consistent with backend mapping
+        PoliceStation: '',  
         court: '',
         registeredDate: new Date().toISOString().split('T')[0]
     });
@@ -53,7 +53,7 @@ const AddPolice = () => {
                     email: formData.email,
                     password: formData.password,
                     name: formData.name,
-                    PoliceStation: formData.PoliceStation,  // Key matches backend expectation
+                    PoliceStation: formData.PoliceStation,  
                     court: formData.court,
                     registeredDate: formData.registeredDate
                 },
@@ -179,7 +179,7 @@ const AddPolice = () => {
                                 { label: "Password", name: "password", type: "password" },
                                 { label: "Confirm Password", name: "confirmPassword", type: "password" },
                                 { label: "Full Name", name: "name", type: "text" },
-                                { label: "Police Station", name: "PoliceStation", type: "text" },  // Consistent field name
+                                { label: "Police Station", name: "PoliceStation", type: "text" },  
                                 { label: "Court", name: "court", type: "text" },
                                 { label: "Registered Date", name: "registeredDate", type: "date" }]
                                     .map(({ label, name, type }) => (
