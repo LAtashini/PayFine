@@ -1,4 +1,4 @@
-// routes/provisionRoutes.js
+
 import express from "express";
 import { addProvision, getAllProvisions, updateProvision, deleteProvision } from "../controllers/provisionController.js";
 import authAdmin from "../middlewares/authAdmin.js";
