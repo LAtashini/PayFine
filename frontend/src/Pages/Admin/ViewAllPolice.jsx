@@ -20,7 +20,7 @@ const ViewAllPolice = () => {
     const userName = localStorage.getItem("adminName") || "Admin";
     const userProfilePic = localStorage.getItem("adminPic") || "https://via.placeholder.com/40";
 
-    // Fetch officers from the backend
+    
     useEffect(() => {
         const fetchOfficers = async () => {
             const token = localStorage.getItem("adminToken");
@@ -48,7 +48,7 @@ const ViewAllPolice = () => {
     };
 
     const handleEditClick = (officer) => {
-        setEditingOfficer(officer._id); // Use MongoDB _id
+        setEditingOfficer(officer._id); 
         setEditFormData({
             name: officer.name,
             station: officer.station,
@@ -67,7 +67,7 @@ const ViewAllPolice = () => {
     };
 
     const handleUpdateOfficer = () => {
-        // Placeholder for future real update call
+        
         const updatedOfficers = officers.map(officer => {
             if (officer._id === editingOfficer) {
                 return { ...officer, ...editFormData };
@@ -80,10 +80,10 @@ const ViewAllPolice = () => {
 
     const handleDeleteOfficer = async (officerId) => {
         if (window.confirm('Are you sure you want to delete this officer?')) {
-            // Placeholder for future real delete call
+    
             const filteredOfficers = officers.filter(officer => officer._id !== officerId);
             setOfficers(filteredOfficers);
-            // You can also implement axios.delete('/api/admin/delete-police/'+officerId) here in future
+            
         }
     };
 
@@ -94,7 +94,7 @@ const ViewAllPolice = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -113,7 +113,7 @@ const ViewAllPolice = () => {
                         <Link to="/PaidFine" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Paid Fine Tickets</Link>
                         <Link to="/PendingFine" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Pending Fine Tickets</Link>
                         <Link to="/AllFine" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">All Fine Tickets</Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
+                        
                     </nav>
                 </div>
                 <button onClick={handleLogout}
