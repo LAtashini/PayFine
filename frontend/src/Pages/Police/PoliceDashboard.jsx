@@ -56,8 +56,7 @@ const PoliceDashboard = () => {
     const toggleUserDropdown = () => {
         setIsUserDropdownOpen(!isUserDropdownOpen);
     };
-
-    // Prepare chart data
+    
     const statusCounts = fines.reduce((acc, fine) => {
         acc[fine.status] = (acc[fine.status] || 0) + 1;
         return acc;
@@ -91,7 +90,7 @@ const PoliceDashboard = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -128,7 +127,7 @@ const PoliceDashboard = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+    
             <div className="flex-1 flex flex-col overflow-auto">
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div>
@@ -183,7 +182,7 @@ const PoliceDashboard = () => {
                         <DashboardCard title="Court" value={dashboardMetrics.court} icon="⚖️" color="yellow" />
                     </div>
 
-                    {/* Charts Section */}
+            
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div className="bg-white p-4 rounded shadow-md">
                             <h2 className="text-lg font-semibold text-center mb-4">Fines by Status</h2>
