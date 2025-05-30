@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import contactImage from '../assets/images/contactus.jpg'; // Make sure this image exists
+import contactImage from '../assets/images/contactus.jpg'; 
 
 const ContactUs = () => {
     const navigate = useNavigate();
@@ -27,7 +27,7 @@ const ContactUs = () => {
 
             <div className="flex-1 flex items-center justify-center py-8 px-4 mb-8">
                 <div className="bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden w-full max-w-4xl h-[600px]">
-                    {/* Left Image section - No background color */}
+                
                     <div className="md:w-1/2 flex items-center justify-center p-8">
                         <img
                             src={contactImage}
@@ -36,7 +36,7 @@ const ContactUs = () => {
                         />
                     </div>
 
-                    {/* Right Form section */}
+                    
                     <div className="md:w-1/2 bg-purple-800 text-white p-8 flex flex-col justify-center">
                         <h2 className="text-2xl font-bold text-center mb-6">Contact Us</h2>
                         <p className="text-center mb-6">
