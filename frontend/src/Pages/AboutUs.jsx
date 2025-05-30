@@ -35,9 +35,9 @@ const AboutUs = () => {
                     </div>
                 </section>
 
-                {/* Rest of your existing Vision and Mission sections */}
+                
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                    {/* Vision Section */}
+                    
                     <section className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-900 shadow-sm">
                         <div className="mb-4">
                             <h3 className="text-2xl font-bold text-blue-900">Our Vision</h3>
@@ -52,7 +52,7 @@ const AboutUs = () => {
                         </div>
                     </section>
 
-                    {/* Mission Section */}
+            
                     <section className="bg-orange-50 p-6 rounded-lg border-l-4 border-orange-600 shadow-sm">
                         <div className="mb-4">
                             <h3 className="text-2xl font-bold text-orange-700">Our Mission</h3>
