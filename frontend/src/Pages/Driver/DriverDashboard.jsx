@@ -18,7 +18,7 @@ const DriverDashboard = () => {
     useEffect(() => {
         const fetchDriverData = async () => {
             const token = localStorage.getItem('driverToken');
-            // const licenseId = localStorage.getItem('driverLicenseId');
+
             const licenseId = localStorage.getItem('driverLid');
 
             if (!token || !licenseId) {
@@ -61,7 +61,7 @@ const DriverDashboard = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+    
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -77,7 +77,7 @@ const DriverDashboard = () => {
                         <Link to="/DriversPaidFine" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Driver's Paid Fine</Link>
                         <Link to="/DriverProvisionDetails" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Provision Details</Link>
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Notifications</Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
+            
                     </nav>
                 </div>
                 <button
@@ -92,9 +92,9 @@ const DriverDashboard = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+    
             <div className="flex-1 flex flex-col overflow-auto">
-                {/* Header */}
+                
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
@@ -104,7 +104,7 @@ const DriverDashboard = () => {
                     </div>
 
                     <div className="flex items-center space-x-6">
-                        {/* Navigation Links */}
+                
                         <div className="hidden md:flex items-center space-x-6">
                             <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
                                 Home
@@ -120,7 +120,7 @@ const DriverDashboard = () => {
                             </Link>
                         </div>
 
-                        {/* User Dropdown */}
+                        
                         <div className="relative">
                             <button
                                 onClick={toggleUserDropdown}
@@ -165,7 +165,7 @@ const DriverDashboard = () => {
                     </div>
                 </header>
 
-                {/* Dashboard Metrics */}
+            
                 <main className="flex-1 p-6 bg-gray-300">
                     <h1 className="text-2xl font-semibold text-purple-900 mb-6">Driver Dashboard</h1>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
