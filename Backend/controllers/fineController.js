@@ -1,6 +1,6 @@
 import fineModel from "../models/fine.js";
 
-// 1. Add a new fine provision
+
 export const addFineProvision = async (req, res) => {
   try {
     const { fineId, provisionId, provision, fineAmount } = req.body;
@@ -19,7 +19,7 @@ export const addFineProvision = async (req, res) => {
   }
 };
 
-// 2. Get all fine provisions
+
 export const getAllFines = async (req, res) => {
   try {
     const fines = await fineModel.find();
@@ -29,7 +29,7 @@ export const getAllFines = async (req, res) => {
   }
 };
 
-// 3. Get a single fine provision by ID
+
 export const getFineById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -43,7 +43,7 @@ export const getFineById = async (req, res) => {
   }
 };
 
-// 4. Update fine provision
+
 export const updateFine = async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,7 +60,7 @@ export const updateFine = async (req, res) => {
   }
 };
 
-// 5. Delete fine provision
+
 export const deleteFine = async (req, res) => {
   try {
     const { id } = req.params;
