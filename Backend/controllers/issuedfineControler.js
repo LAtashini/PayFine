@@ -1,10 +1,10 @@
 import issuedfineModel from "../models/IssuedFineModels.js";
 import fineModel from "../models/fineModel.js";
 import policeModel from "../models/policeModel.js";
-import mongoose from "mongoose";  // Add this import if missing
+import mongoose from "mongoose";  
 import Notification from '../models/notification.js';
 
-// 1. Police adds a new issued fine
+
 export const addIssuedFine = async (req, res) => {
     try {
         const {
@@ -80,29 +80,18 @@ export const addIssuedFine = async (req, res) => {
     }
 };
 
-// 2. Get all fines (admin or police)
-// export const getAllIssuedFines = async (req, res) => {
-//     try {
-//         const fines = await issuedfineModel.find()
-//             .populate("provision")
-//             .populate("policeId");
 
-//         res.status(200).json(fines);
-//     } catch (error) {
-//         res.status(500).json({ message: "Error fetching fines", error });
-//     }
-// };
 export const getAllIssuedFines = async (req, res) => {
     try {
         const { status, fromDate, toDate } = req.query;
         const filter = {};
 
-        // Handle status filter if provided
+        
         if (status) {
-            filter.status = status;  // Directly use status from query
+            filter.status = status;  
         }
 
-        // Handle date range filter
+        
         if (fromDate && toDate) {
             filter.issuedDate = {
                 $gte: new Date(fromDate),
@@ -121,7 +110,7 @@ export const getAllIssuedFines = async (req, res) => {
 };
 
 
-// 3. Get fines by license ID (driver-specific)
+
 export const getFinesByLicenseId = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -135,8 +124,6 @@ export const getFinesByLicenseId = async (req, res) => {
     }
 };
 
-// 4. Mark fine as paid
-// PATCH /api/issuedfines/pay/:referenceNo
 export const markFineAsPaid = async (req, res) => {
     try {
         const { referenceNo } = req.params;
@@ -146,7 +133,7 @@ export const markFineAsPaid = async (req, res) => {
             return res.status(404).json({ message: "Fine not found" });
         }
 
-        // Update status to paid and add payment date
+        
         fine.status = "paid";
         fine.paidDate = new Date();
 
@@ -158,7 +145,7 @@ export const markFineAsPaid = async (req, res) => {
     }
 };
 
-// 5. Notify driver (change status to "notified")
+
 export const notifyDriver = async (req, res) => {
     try {
         const { referenceNo } = req.params;
@@ -178,7 +165,7 @@ export const notifyDriver = async (req, res) => {
     }
 };
 
-// // 6. Get reported fines (police dashboard)
+
 // export const getReportedFines = async (req, res) => {
 //     try {
 //         const { policeId } = req.params;
@@ -188,7 +175,7 @@ export const notifyDriver = async (req, res) => {
 //         const reportedFineAmount = fines.reduce((total, fine) => total + fine.totalAmount, 0);
 
 //         res.status(200).json({
-//             fines, // Add this line to include fines
+//             fines, 
 //             count: reportedFineCount,
 //             amount: reportedFineAmount,
 //             station: fines[0]?.station || null,
@@ -204,7 +191,7 @@ export const getReportedFines = async (req, res) => {
     try {
         const { policeId } = req.params;
 
-        // Validate policeId format
+        
         if (!mongoose.Types.ObjectId.isValid(policeId)) {
             return res.status(400).json({ message: "Invalid policeId format" });
         }
@@ -230,7 +217,7 @@ export const getReportedFines = async (req, res) => {
 };
 
 
-// 7. Get pending (unpaid) fines by license ID
+
 export const getPendingFinesByLicenseId = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -246,7 +233,7 @@ export const getPendingFinesByLicenseId = async (req, res) => {
     }
 };
 
-// Get a fine provision by name
+
 export const getProvisionByName = async (req, res) => {
     try {
         const { name } = req.params;
