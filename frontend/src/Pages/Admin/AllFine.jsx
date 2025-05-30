@@ -63,7 +63,7 @@ const AllFine = () => {
                 query = '?status=unpaid';
             } else if (filter === 'expired') {
                 query = '?status=expired';
-            } // 'all' = no query param
+            } 
 
             const response = await fetch(`http://localhost:4000/api/admin/all-tickets${query}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -93,7 +93,7 @@ const AllFine = () => {
         setError('');
         try {
             const token = localStorage.getItem("adminToken");
-            // Optionally convert dates to ISO or backend-expected format
+            
             const fromISO = new Date(fromDate).toISOString();
             const toISO = new Date(toDate).toISOString();
 
@@ -131,23 +131,23 @@ const AllFine = () => {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `FineTicket_${fineId}.pdf`; // Or dynamically name
-            document.body.appendChild(link); // 👈 Make sure it's in DOM
+            link.download = `FineTicket_${fineId}.pdf`; 
+            document.body.appendChild(link); 
             link.click();
             document.body.removeChild(link);
         } catch (err) {
             console.error("Error downloading fine ticket:", err);
-            // alert("Error downloading fine ticket.");
+            
         }
     };
 
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar - Updated with logo and consistent styling */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
-                    {/* Updated Logo Section */}
+                    
                     <div className="flex flex-col items-center mb-6">
                         <img src={logo} alt="PayFine Logo" className="h-12 w-12 rounded-full border-2 border-white mb-2" />
                         <span className="text-2xl font-semibold">
@@ -181,9 +181,7 @@ const AllFine = () => {
                         <Link to="/AllFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             All Fine Tickets
                         </Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
-                            Feedback
-                        </Link> */}
+                        
                     </nav>
                 </div>
 
@@ -195,9 +193,9 @@ const AllFine = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+            
             <div className="flex-1 flex flex-col">
-                {/* Header - Updated with user dropdown */}
+                
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
@@ -249,12 +247,12 @@ const AllFine = () => {
                     </div>
                 </header>
 
-                {/* Body */}
+                
                 <main className="flex-1 p-6 bg-gray-100 overflow-auto">
                     <div className="bg-white rounded-lg shadow p-6">
                         <h1 className="text-2xl font-semibold text-blue-800 mb-6">All Fine Tickets</h1>
 
-                        {/* Filter Buttons */}
+                        
                         <div className="flex flex-wrap gap-2 mb-6">
                             <button
                                 onClick={() => handleFilterClick('all')}
@@ -268,12 +266,7 @@ const AllFine = () => {
                             >
                                 Paid
                             </button>
-                            {/* <button
-                                onClick={() => handleFilterClick('pending')}
-                                className={`px-4 py-2 rounded-md ${activeFilter === 'pending' ? 'bg-purple-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-                            >
-                                Pending
-                            </button> */}
+                            
                             <button
                                 onClick={() => handleFilterClick('expired')}
                                 className={`px-4 py-2 rounded-md ${activeFilter === 'expired' ? 'bg-purple-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
@@ -282,7 +275,7 @@ const AllFine = () => {
                             </button>
                         </div>
 
-                        {/* Date Range Search */}
+                        
                         <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
                             <h3 className="text-lg font-medium text-gray-700 mb-3">Search by Date Range</h3>
                             <div className="flex flex-wrap items-center gap-4">
@@ -320,7 +313,7 @@ const AllFine = () => {
                             </div>
                         </div>
 
-                        {/* Fines Table */}
+                        
                         <div className="overflow-x-auto w-full max-w-[75vw]">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
