@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"; // Optional if using auth
+import jwt from "jsonwebtoken"; 
 import driverModel from "../models/driverModel.js";
 import issuedfineModel from "../models/IssuedFineModels.js";
 import fineModel from "../models/fineModel.js";
 
-// 1. Register a new driver
+
 export const registerDriver = async (req, res) => {
     try {
         const {
@@ -21,21 +21,21 @@ export const registerDriver = async (req, res) => {
             phoneNumber
         } = req.body;
 
-        // Check if passwords match
+        
         if (password !== confirmPassword) {
             return res.status(400).json({ message: "Passwords do not match" });
         }
 
-        // Check if the driver already exists
+        
         const existingDriver = await driverModel.findOne({ email });
         if (existingDriver) {
             return res.status(400).json({ message: "Driver already registered with this email" });
         }
 
-        // Hash password
+        
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new driver object
+        
         const newDriver = new driverModel({
             role: "driver",
             name,
@@ -50,10 +50,10 @@ export const registerDriver = async (req, res) => {
             phoneNumber
         });
 
-        // Save driver to database
+
         await newDriver.save();
 
-        // Generate JWT token
+        
         const token = jwt.sign({ id: newDriver._id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
         res.status(201).json({
@@ -73,25 +73,23 @@ export const registerDriver = async (req, res) => {
     }
 };
 
-
-// 2. Driver login
 export const loginDriver = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Find driver by email
+    
         const driver = await driverModel.findOne({ email });
         if (!driver) {
             return res.status(404).json({ message: "Driver not found" });
         }
 
-        // Compare passwords
+
         const isMatch = await bcrypt.compare(password, driver.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid password" });
         }
 
-        // Optional JWT token
+    
         const token = jwt.sign({ id: driver._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
         res.status(200).json({
@@ -100,12 +98,12 @@ export const loginDriver = async (req, res) => {
             token
         });
     } catch (error) {
-        console.error("Error logging in:", error);  // Log the error for debugging
+        console.error("Error logging in:", error);  
         res.status(500).json({ message: "Error logging in", error: error.message });
     }
 };
 
-// 3. Get pending fines for driver
+
 export const getPendingFines = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -115,12 +113,12 @@ export const getPendingFines = async (req, res) => {
         });
         res.status(200).json(pendingFines);
     } catch (error) {
-        console.error("Error fetching pending fines:", error);  // Log the error for debugging
+        console.error("Error fetching pending fines:", error);  
         res.status(500).json({ message: "Error fetching pending fines", error: error.message });
     }
 };
 
-// 4. Get paid fines for driver
+
 export const getPaidFines = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -130,23 +128,22 @@ export const getPaidFines = async (req, res) => {
         });
         res.status(200).json(paidFines);
     } catch (error) {
-        console.error("Error fetching paid fines:", error);  // Log the error for debugging
+        console.error("Error fetching paid fines:", error);
         res.status(500).json({ message: "Error fetching paid fines", error: error.message });
     }
 };
 
-// 5. Get provision (fine rule) details
+
 export const getProvisionDetails = async (req, res) => {
     try {
         const provisions = await fineModel.find();
         res.status(200).json(provisions);
     } catch (error) {
-        console.error("Error fetching fine provisions:", error);  // Log the error for debugging
+        console.error("Error fetching fine provisions:", error);  
         res.status(500).json({ message: "Error fetching fine provisions", error: error.message });
     }
 };
 
-// 6. Get notifications
 export const getNotifications = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -157,18 +154,18 @@ export const getNotifications = async (req, res) => {
 
         res.status(200).json(notifications);
     } catch (error) {
-        console.error("Error fetching notifications:", error);  // Log the error for debugging
+        console.error("Error fetching notifications:", error);  
         res.status(500).json({ message: "Error fetching notifications", error: error.message });
     }
 };
 
-// Admin - Get all drivers
+
 export const getAllDrivers = async (req, res) => {
     try {
         const drivers = await driverModel.find().select("-password");
         res.status(200).json(drivers);
     } catch (error) {
-        console.error("Get All Drivers Error:", error);  // Log the error for debugging
+        console.error("Get All Drivers Error:", error);  
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
@@ -199,8 +196,7 @@ export const getDriverDashboard = async (req, res) => {
 };
 
 
-// GET /api/driver/profile/:licenseId
-// GET /api/driver/profile/:licenseId
+
 export const getDriverProfile = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -210,10 +206,10 @@ export const getDriverProfile = async (req, res) => {
             return res.status(404).json({ message: "Driver not found" });
         }
 
-        // Convert to a plain JS object
+        
         const driverObject = driver.toObject();
 
-        // Add a new 'nic' field (mapped from IDNumber)
+        
         driverObject.nic = driver.IDNumber;
 
         res.status(200).json(driverObject);
@@ -224,7 +220,7 @@ export const getDriverProfile = async (req, res) => {
 };
 
 
-// PATCH /api/driver/profile/:licenseId
+
 export const updateDriverProfile = async (req, res) => {
     try {
         const { licenseId } = req.params;
@@ -251,7 +247,7 @@ export const updateDriverProfile = async (req, res) => {
     }
 };
 
-// PATCH /api/driver/change-password/:licenseId
+
 export const changeDriverPassword = async (req, res) => {
     try {
         const { licenseId } = req.params;
