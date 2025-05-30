@@ -9,7 +9,7 @@ const authDriver = (req, res, next) => {
     const token = authHeader.split(' ')[1];
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.driverId = decoded.id;  // Attach driverId to request
+        req.driverId = decoded.id;  
         next();
     } catch (err) {
         console.error("Invalid token:", err);
