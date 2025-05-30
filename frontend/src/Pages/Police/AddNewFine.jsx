@@ -10,25 +10,23 @@ const AddNewFine = () => {
 
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const [formData, setFormData] = useState({
-        // Driver Information
         driverName: '',
         address: '',
         licenseNumber: '',
         vehicleClass: '',
         nic: '',
 
-        // Police Information
+
         officerId: '',
         officerName: '',
         court: '',
 
-        // Date & Time
         issuedDate: new Date().toISOString().split('T')[0],
         issuedTime: new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' }),
         expiredDate: '',
         courtDate: '',
 
-        // Fine Information
+    
         place: '',
         vehicleNumber: '',
         provision: '',
@@ -51,7 +49,7 @@ const AddNewFine = () => {
     });
 
 
-    const [officerName, setOfficerName] = useState('Loading...'); // Default placeholder
+    const [officerName, setOfficerName] = useState('Loading...'); 
 
     useEffect(() => {
         const fetchOfficerName = async () => {
@@ -93,7 +91,7 @@ const AddNewFine = () => {
             [name]: value
         });
 
-        // Auto-fill amount when provision is selected
+
         if (name === 'provision') {
             const selectedProvision = [...provisionsList, ...formData.additionalProvisions]
                 .find(p => p.name === value);
@@ -229,13 +227,13 @@ const AddNewFine = () => {
             (decodedText, decodedResult) => {
                 console.log("QR Code Scanned:", decodedText);
 
-                // Fix: Split by \n or newline properly
-                const lines = decodedText.split(/\\n|\n/);  // Handles both \n or \\n in text
+            
+                const lines = decodedText.split(/\\n|\n/);  
                 const formUpdates = {};
 
                 lines.forEach(line => {
                     const [key, value] = line.split(':').map(item => item.trim());
-                    if (!key || !value) return; // Skip if no valid key-value
+                    if (!key || !value) return; 
 
                     switch (key.toLowerCase()) {
                         case 'driversname':
@@ -266,7 +264,7 @@ const AddNewFine = () => {
                 }));
 
                 scanner.clear();
-                document.getElementById("qr-reader").innerHTML = ""; // Clear scanner
+                document.getElementById("qr-reader").innerHTML = ""; 
             },
             (errorMessage) => {
                 console.warn("QR Scan error:", errorMessage);
@@ -277,10 +275,10 @@ const AddNewFine = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+    
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
-                    {/* Updated Logo Section */}
+                
                     <div className="flex flex-col items-center mb-6">
                         <img src={logo} alt="PayFine Logo" className="h-12 w-12 rounded-full border-2 border-white mb-2" />
                         <span className="text-2xl font-semibold">
@@ -302,17 +300,15 @@ const AddNewFine = () => {
                         <Link to="/RevenueLicense" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Revenue License
                         </Link>
-                        {/* <Link to="/ViewReportedFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
-                            View Reported Fine
-                        </Link> */}
+                
                     </nav>
                 </div>
 
-                {/* Logout Button at the bottom */}
+                
                 <button
                     onClick={() => {
                         localStorage.removeItem("authToken");
-                        localStorage.removeItem("policeId"); // Clear policeId too
+                        localStorage.removeItem("policeId"); 
                         window.location.href = "/";
                     }}
                     className="block w-full py-2.5 px-4 rounded bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
@@ -321,9 +317,9 @@ const AddNewFine = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+            
             <div className="flex-1 flex flex-col overflow-auto">
-                {/* Header */}
+                
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div>
                         <span className="text-3xl font-bold">
@@ -376,14 +372,14 @@ const AddNewFine = () => {
                     </div>
                 </header>
 
-                {/* Body */}
+        
                 <main className="flex-1 p-6 bg-gray-300 overflow-auto">
                     <h1 className="text-2xl font-semibold text-purple-800 mb-6">Add New Fine</h1>
                     {error && <p className="text-red-600">{error}</p>}
                     {loading && <p className="text-gray-700">Submitting...</p>}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Driver Information Section */}
+                
                         <div className="bg-white p-6 rounded-lg shadow-md">
                             <h2 className="text-xl font-semibold text-purple-800 mb-4">Driver Information</h2>
 
@@ -460,7 +456,7 @@ const AddNewFine = () => {
                             </div>
                         </div>
 
-                        {/* Police Information Section */}
+
                         <div className="bg-white p-6 rounded-lg shadow-md">
                             <h2 className="text-xl font-semibold text-purple-800 mb-4">Police Information</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -500,7 +496,7 @@ const AddNewFine = () => {
                             </div>
                         </div>
 
-                        {/* Date & Time Section */}
+                    
                         <div className="bg-white p-6 rounded-lg shadow-md">
                             <h2 className="text-xl font-semibold text-purple-800 mb-4">Date & Time</h2>
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -551,7 +547,7 @@ const AddNewFine = () => {
                             </div>
                         </div>
 
-                        {/* Fine Information Section */}
+        
                         <div className="bg-white p-6 rounded-lg shadow-md">
                             <h2 className="text-xl font-semibold text-purple-800 mb-4">Fine Information</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -615,7 +611,7 @@ const AddNewFine = () => {
                                 </div>
                             </div>
 
-                            {/* Additional Provisions */}
+                
                             <div className="mb-4">
                                 <label className="block text-gray-700 mb-2">Additional Provisions</label>
                                 <div className="flex space-x-2 mb-2">
@@ -664,7 +660,7 @@ const AddNewFine = () => {
                                 )}
                             </div>
 
-                            {/* Total Amount */}
+                    
                             <div className="mt-6 p-4 bg-purple-100 rounded-lg">
                                 <div className="flex justify-between items-center">
                                     <span className="text-lg font-semibold text-purple-800">Total Amount:</span>
@@ -675,7 +671,7 @@ const AddNewFine = () => {
                             </div>
                         </div>
 
-                        {/* Submit and Reset Buttons */}
+        
                         <div className="flex justify-between">
                             <button
                                 type="button"
