@@ -39,17 +39,17 @@ const ViewReportedFine = () => {
         fetchOfficerName();
     }, []);
 
-    // Fetch data from the backend API
+    
     useEffect(() => {
         const fetchFines = async () => {
             setIsLoading(true);
             try {
-                const policeId = localStorage.getItem("policeId"); // Assuming this is saved on login
+                const policeId = localStorage.getItem("policeId"); 
                 const res = await fetch(`http://localhost:4000/api/police/reported-fine/${policeId}`);
                 const data = await res.json();
                 console.log("Fetched fines:", data);
                 if (res.ok) {
-                    const finesArray = data.fines || [];   // Safely extract the array
+                    const finesArray = data.fines || [];   
                     setFines(finesArray);
                     setFilteredFines(finesArray);
                 } else {
@@ -66,7 +66,7 @@ const ViewReportedFine = () => {
         fetchFines();
     }, []);
 
-    // Search functionality
+    
     useEffect(() => {
         if (searchTerm.trim() === '') {
             setFilteredFines(fines);
@@ -87,7 +87,7 @@ const ViewReportedFine = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -105,7 +105,7 @@ const ViewReportedFine = () => {
                 <button
                     onClick={() => {
                         localStorage.removeItem("authToken");
-                        localStorage.removeItem("policeId"); // Clear policeId too
+                        localStorage.removeItem("policeId"); 
                         window.location.href = "/";
                     }}
                     className="block w-full py-2.5 px-4 rounded bg-purple-700 text-white hover:bg-purple-800 text-center font-bold"
@@ -114,7 +114,7 @@ const ViewReportedFine = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+            
             <div className="flex-1 flex flex-col overflow-auto">
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div></div>
@@ -140,7 +140,7 @@ const ViewReportedFine = () => {
                 <main className="flex-1 p-6 bg-gray-300 overflow-auto">
                     <h1 className="text-2xl font-semibold text-purple-900 mb-6">View Reported Fines</h1>
 
-                    {/* Search Box */}
+                    
                     <div className="mb-6 bg-white p-4 rounded-lg shadow-md">
                         <div className="flex items-center">
                             <input
@@ -154,7 +154,7 @@ const ViewReportedFine = () => {
                         </div>
                     </div>
 
-                    {/* Fines Table */}
+                    
                     <div className="bg-white rounded-lg shadow overflow-hidden">
                         {isLoading ? (
                             <div className="p-6 text-center">Loading fines...</div>
