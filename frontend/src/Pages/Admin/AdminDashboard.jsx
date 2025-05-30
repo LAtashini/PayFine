@@ -159,9 +159,9 @@ const AdminDashboard = () => {
                                     <DashboardCard title="Provisions" value={stats.provisions} color="indigo" />
                                 </div>
 
-                                {/* Three Charts Aligned in a Row */}
+                                
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-                                    {/* Bar Chart: Total Users */}
+                                    
                                     <div className="bg-white p-4 rounded shadow">
                                         <h2 className="text-lg font-semibold text-blue-800 mb-2">Total Users</h2>
                                         <BarChart width={300} height={250} data={[
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
                                         </BarChart>
                                     </div>
 
-                                    {/* Pie Chart: Paid vs Pending */}
+                                    
                                     <div className="bg-white p-4 rounded shadow">
                                         <h2 className="text-lg font-semibold text-blue-800 mb-2">Tickets Status</h2>
                                         <PieChart width={250} height={250}>
@@ -191,7 +191,7 @@ const AdminDashboard = () => {
                                         </PieChart>
                                     </div>
 
-                                    {/* Bar Chart: Provisions */}
+                                    
                                     <div className="bg-white p-4 rounded shadow">
                                         <h2 className="text-lg font-semibold text-blue-800 mb-2">Provisions Overview</h2>
                                         <BarChart width={300} height={250} data={[
