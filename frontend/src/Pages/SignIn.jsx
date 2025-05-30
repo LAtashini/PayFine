@@ -42,7 +42,7 @@ const SignIn = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Store token
+    
                 console.log(data)
                 const userId = data[role]?._id || data[role]?.id;
                 localStorage.setItem(`${role}Token`, data.token);
@@ -62,7 +62,7 @@ const SignIn = () => {
 
 
 
-                // Navigate based on role
+            
                 if (role === 'driver') navigate('/DriverDashboard');
                 else if (role === 'police') navigate('/PoliceDashboard');
                 else if (role === 'admin') navigate('/AdminDashboard');
