@@ -20,7 +20,7 @@ const PaidFine = () => {
     useEffect(() => {
         const fetchPaidFines = async () => {
             try {
-                const token = localStorage.getItem("adminToken"); // Or adjust token key if different
+                const token = localStorage.getItem("adminToken"); 
                 const response = await fetch('http://localhost:4000/api/admin/paid-tickets', {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -62,7 +62,7 @@ const PaidFine = () => {
 
         try {
             const token = localStorage.getItem("adminToken");
-            // Construct query string based on filter
+            
             let query = "";
             if (filter === "today") {
                 const today = new Date().toISOString().split("T")[0];
@@ -128,22 +128,22 @@ const PaidFine = () => {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `FineTicket_${fineId}.csv`;  // Or .csv
+            link.download = `FineTicket_${fineId}.csv`;  
             link.click();
         } catch (err) {
-            // alert("Failed to download ticket.");
+            
         }
     };
 
 
-    // Filter fines based on active filter (this is simplified - you would typically fetch from API)
+    
     const filteredFines = fines.filter(fine => {
         if (activeFilter === 'all') return true;
 
         const paidDateObj = fine.paidDate ? new Date(fine.paidDate) : null;
-        if (!paidDateObj) return false;  // Skip if no paidDate
+        if (!paidDateObj) return false;  
 
-        const paidDate = paidDateObj.toISOString().split("T")[0];  // Ensures correct format
+        const paidDate = paidDateObj.toISOString().split("T")[0];  
         const today = new Date().toISOString().split("T")[0];
 
         if (activeFilter === 'today') {
@@ -171,10 +171,10 @@ const PaidFine = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar - Updated with logo and consistent styling */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
-                    {/* Updated Logo Section */}
+                    
                     <div className="flex flex-col items-center mb-6">
                         <img src={logo} alt="PayFine Logo" className="h-12 w-12 rounded-full border-2 border-white mb-2" />
                         <span className="text-2xl font-semibold">
@@ -208,9 +208,7 @@ const PaidFine = () => {
                         <Link to="/AllFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             All Fine Tickets
                         </Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
-                            Feedback
-                        </Link> */}
+                        
                     </nav>
                 </div>
 
@@ -222,9 +220,9 @@ const PaidFine = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+    
             <div className="flex-1 flex flex-col">
-                {/* Header - Updated with user dropdown */}
+                
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
@@ -276,12 +274,12 @@ const PaidFine = () => {
                     </div>
                 </header>
 
-                {/* Body */}
+
                 <main className="flex-1 p-6 bg-gray-100 overflow-auto">
                     <div className="bg-white rounded-lg shadow p-6">
                         <h1 className="text-2xl font-semibold text-blue-800 mb-6">Paid Fine Tickets</h1>
 
-                        {/* Filter Buttons */}
+                        
                         <div className="flex flex-wrap gap-2 mb-6">
                             <button
                                 onClick={() => handleFilterClick('all')}
@@ -309,7 +307,7 @@ const PaidFine = () => {
                             </button>
                         </div>
 
-                        {/* Date Range Search */}
+                        
                         <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
                             <h3 className="text-lg font-medium text-gray-700 mb-3">Search by Date Range</h3>
                             <div className="flex flex-wrap items-center gap-4">
@@ -347,7 +345,7 @@ const PaidFine = () => {
                             </div>
                         </div>
 
-                        {/* Fines Table */}
+                        
                         <div className="overflow-x-auto">
                             {filteredFines.length === 0 && !loading && !error && (
                                 <p className="text-gray-500">No paid fines found.</p>
