@@ -5,8 +5,8 @@ const driverSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    image: { type: String, required: false },  // Now optional
-    Address: { type: Object, required: true },  // Address remains as Object
+    image: { type: String, required: false },  
+    Address: { type: Object, required: true },  
     LicenseNumber: { type: String, required: true },
     LicenseIssedDate: { type: String, required: true },
     LicenseExpiredDate: { type: String, required: true },
