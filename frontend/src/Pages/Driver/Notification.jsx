@@ -71,7 +71,7 @@ const Notification = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+        
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -86,7 +86,7 @@ const Notification = () => {
                         <Link to="/DriversPaidFine" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Driver's Paid Fine</Link>
                         <Link to="/DriverProvisionDetails" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Provision Details</Link>
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Notifications</Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
+            
                     </nav>
                 </div>
                 <button onClick={() => { localStorage.clear(); window.location.href = '/'; }} className="block py-2.5 px-4 rounded bg-purple-700 hover:bg-purple-800 text-center font-bold">
@@ -94,7 +94,7 @@ const Notification = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+        
             <div className="flex-1 flex flex-col overflow-auto">
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
@@ -105,7 +105,7 @@ const Notification = () => {
                     </div>
 
                     <div className="flex items-center space-x-6">
-                        {/* Navigation Links */}
+                    
                         <div className="hidden md:flex items-center space-x-6">
                             <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
                                 Home
@@ -121,7 +121,7 @@ const Notification = () => {
                             </Link>
                         </div>
 
-                        {/* User Dropdown */}
+                        
                         <div className="relative">
                             <button
                                 onClick={toggleUserDropdown}
@@ -184,9 +184,7 @@ const Notification = () => {
                                         )}
                                         <p className="text-sm font-semibold text-yellow-600 mt-15">{notif.status.toUpperCase()}</p>
                                     </div>
-                                    {/* <button className="w-full mt-auto bg-purple-700 text-white py-2 rounded-lg hover:bg-purple-800 transition duration-200 font-semibold">
-                                        View Details
-                                    </button> */}
+                            
                                 </div>
 
                             ))}
