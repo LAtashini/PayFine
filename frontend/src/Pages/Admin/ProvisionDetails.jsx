@@ -6,7 +6,7 @@ import logo from '../../assets/images/logo.png';
 const ProvisionDetails = () => {
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const navigate = useNavigate();
-    // const userName = localStorage.getItem("adminName") || "Admin r";
+    
     const userProfilePic = localStorage.getItem("adminPic") || "https://via.placeholder.com/40";
     const [provisions, setProvisions] = useState([]);
 
@@ -29,7 +29,7 @@ const ProvisionDetails = () => {
     }, []);
 
 
-    // Form state
+    
     const [formData, setFormData] = useState({
         provisionId: '',
         sectionOfAct: '',
@@ -52,7 +52,7 @@ const ProvisionDetails = () => {
         navigate("/AdminSignUp");
     };
 
-    // Handle form input changes
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -61,7 +61,7 @@ const ProvisionDetails = () => {
         });
     };
 
-    // Handle edit form changes
+    
     const handleEditInputChange = (e) => {
         const { name, value } = e.target;
         setEditFormData({
@@ -70,7 +70,7 @@ const ProvisionDetails = () => {
         });
     };
 
-    // Add new provision
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -86,8 +86,8 @@ const ProvisionDetails = () => {
             const data = await res.json();
             if (res.ok) {
                 setFormData({ provisionId: '', sectionOfAct: '', fineAmount: '' });
-                // fetchProvisions();
-                window.location.reload();  // This reloads the entire page
+                
+                window.location.reload();  
 
             } else {
                 alert(data.message || "Failed to add provision.");
@@ -98,7 +98,7 @@ const ProvisionDetails = () => {
         }
     };
 
-    // Edit provision
+    
     const handleEdit = (provision) => {
         setEditingId(provision._id);
         setEditFormData({
@@ -108,7 +108,7 @@ const ProvisionDetails = () => {
         });
     };
 
-    // Save edited provision
+    
     const handleSaveEdit = async () => {
         const token = localStorage.getItem('adminToken');
         try {
@@ -122,7 +122,7 @@ const ProvisionDetails = () => {
             });
             const data = await res.json();
             if (res.ok) {
-                // Update local state with backend response
+                
                 setProvisions(prev => prev.map(p => p._id === editingId ? data : p));
                 setEditingId(null);
             } else {
@@ -134,12 +134,12 @@ const ProvisionDetails = () => {
     };
 
 
-    // Cancel edit
+    
     const handleCancelEdit = () => {
         setEditingId(null);
     };
 
-    // Delete provision
+    
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this provision?")) return;
         try {
@@ -183,7 +183,7 @@ const ProvisionDetails = () => {
 
                 const data = await res.json();
                 if (res.ok) {
-                    // 🔥 Assuming the backend returns admin info in a `user` field or similar
+                    
                     const adminName = localStorage.getItem("adminName");
                     setUserName(adminName);
                 } else {
@@ -204,10 +204,10 @@ const ProvisionDetails = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar - Updated with logo and consistent styling */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
-                    {/* Updated Logo Section */}
+                    
                     <div className="flex flex-col items-center mb-6">
                         <img src={logo} alt="PayFine Logo" className="h-12 w-12 rounded-full border-2 border-white mb-2" />
                         <span className="text-2xl font-semibold">
@@ -241,9 +241,7 @@ const ProvisionDetails = () => {
                         <Link to="/AllFine" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             All Fine Tickets
                         </Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
-                            Feedback
-                        </Link> */}
+                        
                     </nav>
                 </div>
 
@@ -255,9 +253,9 @@ const ProvisionDetails = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+            
             <div className="flex-1 flex flex-col">
-                {/* Header - Updated with user dropdown */}
+                
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
@@ -309,12 +307,12 @@ const ProvisionDetails = () => {
                     </div>
                 </header>
 
-                {/* Body */}
+        
                 <main className="flex-1 p-6 bg-gray-100 overflow-auto">
                     <div className="bg-white rounded-lg shadow p-6">
                         <h1 className="text-2xl font-semibold text-blue-800 mb-6">Provision Details</h1>
 
-                        {/* Add Provision Form */}
+                        
                         <form onSubmit={handleSubmit} className="mb-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                                 <div>
@@ -369,12 +367,12 @@ const ProvisionDetails = () => {
                             </button>
                         </form>
 
-                        {/* Provisions Table */}
+            
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th> */}
+                                
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Provision ID</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Section of Act</th>
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fine Amount</th>
@@ -384,7 +382,7 @@ const ProvisionDetails = () => {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {provisions.map((provision) => (
                                         <tr key={provision._id}>
-                                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{provision._id}</td> */}
+                            
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 {editingId === provision._id ? (
                                                     <input
