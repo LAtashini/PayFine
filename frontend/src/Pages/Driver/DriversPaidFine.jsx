@@ -85,11 +85,9 @@ const DriversPaidFine = () => {
     }, []);
 
 
-    // Apply filters
     useEffect(() => {
         let filtered = [...paidFines];
 
-        // Time period filter
         const now = new Date();
         switch (filter) {
             case 'today':
@@ -114,11 +112,11 @@ const DriversPaidFine = () => {
                 });
                 break;
             default:
-                // 'all' - no time filter
+            
                 break;
         }
 
-        // Date range filter
+        
         if (startDate && endDate) {
             filtered = filtered.filter(fine => {
                 const paidDate = new Date(fine.paidDate);
@@ -130,7 +128,7 @@ const DriversPaidFine = () => {
     }, [paidFines, filter, startDate, endDate]);
 
     const handleSearch = () => {
-        // The useEffect above will handle the filtering automatically
+        
         console.log('Searching with current filters');
     };
 
@@ -192,7 +190,7 @@ const DriversPaidFine = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
+            
             <div className="bg-gray-800 text-white w-64 py-7 px-2 shadow-lg flex flex-col justify-between">
                 <div>
                     <div className="flex flex-col items-center mb-6">
@@ -219,12 +217,12 @@ const DriversPaidFine = () => {
                         <Link to="/Notifications" className="block py-2.5 px-4 rounded transition duration-200 bg-purple-800 text-white hover:bg-purple-900 text-center font-bold">
                             Notifications
                         </Link>
-                        {/* <Link to="/Feedback" className="block py-2.5 px-4 rounded bg-purple-800 hover:bg-purple-900 text-center font-bold">Feedback</Link> */}
+                        
 
                     </nav>
                 </div>
 
-                {/* Logout Button at the bottom */}
+            
                 <button
                     onClick={() => {
                         localStorage.removeItem('driverToken');
@@ -237,9 +235,9 @@ const DriversPaidFine = () => {
                 </button>
             </div>
 
-            {/* Main Content */}
+        
             <div className="flex-1 flex flex-col overflow-auto">
-                {/* Updated Header */}
+            
                 <header className="bg-purple-900 shadow-sm p-4 flex justify-between items-center">
                     <div className="flex items-center">
                         <span className="text-3xl font-bold">
@@ -249,7 +247,7 @@ const DriversPaidFine = () => {
                     </div>
 
                     <div className="flex items-center space-x-6">
-                        {/* Navigation Links */}
+                    
                         <div className="hidden md:flex items-center space-x-6">
                             <Link to="/" className="text-white hover:text-purple-300 transition duration-200">
                                 Home
@@ -265,7 +263,7 @@ const DriversPaidFine = () => {
                             </Link>
                         </div>
 
-                        {/* User Dropdown */}
+                    
                         <div className="relative">
                             <button
                                 onClick={toggleUserDropdown}
@@ -310,7 +308,7 @@ const DriversPaidFine = () => {
                     </div>
                 </header>
 
-                {/* Body */}
+
                 <main className="flex-1 p-6 bg-gray-100 overflow-auto">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-semibold text-purple-800">Paid Fines</h1>
@@ -319,10 +317,10 @@ const DriversPaidFine = () => {
                         </div>
                     </div>
 
-                    {/* Filters */}
+                    
                     <div className="bg-white p-4 rounded-lg shadow-md mb-6">
                         <div className="flex flex-col md:flex-row justify-between gap-4">
-                            {/* Left side - Time period filter */}
+                    
                             <div className="w-full md:w-1/2">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Time Period</label>
                                 <div className="flex space-x-2">
@@ -353,10 +351,10 @@ const DriversPaidFine = () => {
                                 </div>
                             </div>
 
-                            {/* Right side - Date range filter and buttons */}
+                
                             <div className="w-full md:w-1/2">
                                 <div className="flex flex-col md:flex-row gap-4">
-                                    {/* Date range filter */}
+                
                                     <div className="flex-1">
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
                                         <div className="flex space-x-2">
@@ -382,7 +380,7 @@ const DriversPaidFine = () => {
                                         </div>
                                     </div>
 
-                                    {/* Action buttons */}
+            
                                     <div className="flex items-end space-x-2">
                                         <button
                                             onClick={handleSearch}
@@ -402,7 +400,7 @@ const DriversPaidFine = () => {
                         </div>
                     </div>
 
-                    {/* Paid Fines Table */}
+                
                     <div className="bg-white rounded-lg shadow overflow-hidden">
                         {filteredFines.length === 0 ? (
                             <div className="p-8 text-center">
