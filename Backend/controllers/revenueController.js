@@ -1,6 +1,6 @@
 import revenueModel from "../models/revenueModel.js";
 
-// Create a new revenue license entry
+
 export const createRevenue = async (req, res) => {
   try {
     const {
@@ -34,7 +34,7 @@ export const createRevenue = async (req, res) => {
   }
 };
 
-// Get all revenue licenses
+
 export const getAllRevenue = async (req, res) => {
   try {
     const revenues = await revenueModel.find();
@@ -44,7 +44,7 @@ export const getAllRevenue = async (req, res) => {
   }
 };
 
-// Get revenue license by vehicle number
+
 export const getRevenueByVehicleNo = async (req, res) => {
   try {
     const { vehicleNo } = req.params;
@@ -60,7 +60,7 @@ export const getRevenueByVehicleNo = async (req, res) => {
   }
 };
 
-// Delete revenue license by ID
+
 export const deleteRevenue = async (req, res) => {
   try {
     const { id } = req.params;
@@ -76,7 +76,7 @@ export const deleteRevenue = async (req, res) => {
   }
 };
 
-// revenueController.js
+
 export const getRevenueByLicenseNumber = async (req, res) => {
   try {
     const { licenseNumber } = req.params;
