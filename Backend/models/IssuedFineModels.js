@@ -4,12 +4,12 @@ const issuedfineSchema = new mongoose.Schema({
     referenceNo: { type: String, required: true },
     policeId: { type: mongoose.Schema.Types.ObjectId, ref: "police", required: true },
     licenseId: { type: String, required: true },
-    driverName: { type: String },               // New field
-    address: { type: String },                  // New field
-    vehicleClass: { type: String },             // New field
-    nic: { type: String },                      // New field
-    officerName: { type: String },              // New field
-    place: { type: String },                    // New field
+    driverName: { type: String },              
+    address: { type: String },                  
+    vehicleClass: { type: String },             
+    nic: { type: String },                      
+    officerName: { type: String },              
+    place: { type: String },                    
     vehicleNo: { type: String, required: true },
     issuedDate: { type: Date, required: true },
     issuedTime: { type: String, required: true },
@@ -17,9 +17,9 @@ const issuedfineSchema = new mongoose.Schema({
     expiredTime: { type: String },
     court: { type: String },
     courtDate: { type: Date },
-    provision: { type: String },                // Changed from ObjectId to String (from frontend dropdown)
-    amount: { type: Number },                   // New field: main provision amount
-    additionalProvisions: [                     // New field: array of additional provisions
+    provision: { type: String },                
+    amount: { type: Number },                   
+    additionalProvisions: [                     
         {
             name: { type: String },
             amount: { type: Number }
