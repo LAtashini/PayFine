@@ -18,22 +18,21 @@ import { getAllDrivers, getPendingFines } from '../controllers/driverController.
 
 const adminRouter = express.Router();
 
-// Admin Authentication Routes
-adminRouter.post('/register', registerAdmin);  // Admin registration
-adminRouter.post('/login', loginAdmin);        // Admin login
 
-// Admin Dashboard
-adminRouter.get('/dashboard', authAdmin, getAdminDashboard);  // Protected
+adminRouter.post('/register', registerAdmin);  
+adminRouter.post('/login', loginAdmin);        
 
-// Police Management (Protected)
+
+adminRouter.get('/dashboard', authAdmin, getAdminDashboard);  
+
+
 adminRouter.post('/add-police', authAdmin, upload.single('image'), addPolice);
 adminRouter.get('/police', authAdmin, getAllPolice);
 
-// Driver Management (Protected)
+
 adminRouter.get('/drivers', authAdmin, getAllDrivers);
 
-// Fine Management (Protected)
-// adminRouter.get('/paid-tickets', authAdmin, payFine);
+
 adminRouter.get('/pending-tickets', authAdmin, getPendingFiness);
 adminRouter.get('/all-tickets', authAdmin, getAllIssuedFines);
 adminRouter.get('/paid-tickets', authAdmin, getPaidFines);
