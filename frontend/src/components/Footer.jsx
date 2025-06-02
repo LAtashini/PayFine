@@ -9,14 +9,14 @@ const Footer = () => {
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     <div className="mb-4 md:mb-0">
-                        {/* Updated logo with white "Pay" and blue "Fine" */}
+                    
                         <div className="flex items-center">
                             <h3 className="text-2xl font-bold text-white">Pay</h3>
                             <h3 className="text-2xl font-bold text-blue-400">Fine</h3>
                         </div>
                         <p className="text-gray-400 mt-2">Simplifying fine management</p>
 
-                        {/* Contact information from your image */}
+                        
                         <div className="mt-4 text-gray-300 space-y-1">
                             <div className="flex items-center">
                                 <span className="mr-2">📞</span>
